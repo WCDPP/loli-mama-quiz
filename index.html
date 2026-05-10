@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>你适合什么样的萝莉妈妈？ · Loli-Mama Personality Quiz</title>
+<title>你适合什么样的萝莉妈妈？ · 超级人格分类测验</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#1a2e1f; --ink-rgb:26,46,31;
@@ -20,472 +20,634 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;min-height:100vh;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 body{display:flex;flex-direction:column;align-items:center}
-
-/* ========== 容器 ========== */
-.app{width:100%;max-width:680px;padding:8vh 6vw 6vh;display:flex;flex-direction:column;min-height:100vh}
-
-/* ========== 顶栏 chrome ========== */
-.top-bar{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:8vh}
-.top-bar .sep{opacity:.3}
-
-/* ========== 屏控制 ========== */
+.app{width:100%;max-width:720px;padding:6vh 5vw;display:flex;flex-direction:column;min-height:100vh}
+.top-bar{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.45;margin-bottom:6vh}
 .screen{display:none;flex:1;flex-direction:column}
 .screen.active{display:flex}
-
-/* ========== 标题 ========== */
-h1{font-family:var(--serif);font-weight:900;font-size:clamp(2rem,5.5vw,3.2rem);line-height:1.1;letter-spacing:-.01em;margin-bottom:2vh}
-h2{font-family:var(--serif);font-weight:700;font-size:clamp(1.4rem,3.2vw,2rem);line-height:1.2;margin-bottom:1.6vh}
-.sub{font-family:var(--serif);font-weight:400;font-size:clamp(.95rem,1.5vw,1.2rem);line-height:1.6;opacity:.72;margin-bottom:3vh}
-
-/* ========== 开始按钮 ========== */
-.btn{display:inline-flex;align-items:center;gap:.6em;padding:1.8vh 3.2vw;font-family:var(--mono);font-size:13px;letter-spacing:.24em;text-transform:uppercase;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:all .25s ease;border-radius:2px}
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.12;letter-spacing:-.01em;margin-bottom:2vh}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(1.3rem,3vw,1.8rem);line-height:1.25;margin-bottom:1.6vh}
+.sub{font-family:var(--serif);font-weight:400;font-size:clamp(.9rem,1.4vw,1.1rem);line-height:1.65;opacity:.72;margin-bottom:3vh}
+.btn{display:inline-flex;align-items:center;gap:.6em;padding:1.6vh 2.8vw;font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:all .25s ease;border-radius:2px}
 .btn:hover{background:var(--ink);color:var(--paper)}
-.btn.primary{background:var(--ink);color:var(--paper);padding:2vh 4vw;font-size:14px}
+.btn.primary{background:var(--ink);color:var(--paper);padding:2vh 4vw;font-size:13px}
 .btn.primary:hover{background:var(--ink-tint)}
-.btn.small{font-size:11px;padding:1.2vh 2vw}
+.btn.small{font-size:10px;padding:1vh 1.8vw}
+.meta-foot{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;opacity:.35;margin-top:auto;padding-top:4vh}
 
-/* ========== 底部元信息 ========== */
-.meta-foot{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;opacity:.4;margin-top:auto;padding-top:4vh}
-
-/* ========== 答题屏 ========== */
-.q-counter{font-family:var(--mono);font-size:12px;letter-spacing:.24em;opacity:.5;margin-bottom:3vh}
-.q-text{font-family:var(--serif);font-weight:600;font-size:clamp(1.3rem,2.6vw,1.8rem);line-height:1.45;margin-bottom:5vh}
-.options{display:flex;flex-direction:column;gap:2vh}
-.opt{display:flex;align-items:flex-start;gap:2vw;padding:2.4vh 2.4vw;border:1px solid rgba(var(--ink-rgb),.15);border-radius:3px;cursor:pointer;transition:all .22s ease;background:transparent;text-align:left;font-family:var(--sans);font-size:clamp(.9rem,1.3vw,1.1rem);line-height:1.55;color:var(--ink);width:100%}
-.opt:hover{border-color:var(--ink);background:rgba(var(--ink-rgb),.03)}
-.opt:active{transform:scale(.99)}
-.opt .letter{font-family:var(--serif);font-weight:700;font-size:1.4em;opacity:.35;min-width:1.2em;line-height:1}
-.opt .opt-text{flex:1}
-.opt.selected{border-color:var(--ink);background:rgba(var(--ink-rgb),.06)}
+/* --- 答题 --- */
+.q-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2vh}
+.q-prog{font-family:var(--mono);font-size:11px;letter-spacing:.24em;opacity:.4}
+.q-section{font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;opacity:.3;margin-bottom:1vh}
+.q-text{font-family:var(--serif);font-weight:600;font-size:clamp(1.2rem,2.4vw,1.7rem);line-height:1.5;margin-bottom:4vh}
+.options{display:flex;flex-direction:column;gap:1.6vh}
+.opt{display:flex;align-items:flex-start;gap:2vw;padding:2.2vh 2.2vw;border:1px solid rgba(var(--ink-rgb),.12);border-radius:2px;cursor:pointer;transition:all .2s ease;background:transparent;text-align:left;font-size:clamp(.88rem,1.2vw,1.05rem);line-height:1.55;color:var(--ink);width:100%;font-family:var(--sans)}
+.opt:hover{border-color:var(--ink);background:rgba(var(--ink-rgb),.025)}
+.opt .ltr{font-family:var(--serif);font-weight:700;font-size:1.3em;opacity:.3;min-width:1em;line-height:1}
+.opt .txt{flex:1}
+.opt.sel{border-color:var(--ink);background:rgba(var(--ink-rgb),.05)}
 .opt.dim{opacity:.3;pointer-events:none}
+.prog-wrap{display:flex;align-items:center;gap:2vw;margin-top:5vh;font-family:var(--mono);font-size:10px;letter-spacing:.2em;opacity:.4}
+.prog-bar{flex:1;height:2px;background:rgba(var(--ink-rgb),.08);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--ink);transition:width .4s ease;border-radius:2px}
 
-/* ========== 进度条 ========== */
-.progress-wrap{display:flex;align-items:center;gap:1.6vw;margin-top:6vh;font-family:var(--mono);font-size:10px;letter-spacing:.2em;opacity:.45}
-.progress-bar{flex:1;height:2px;background:rgba(var(--ink-rgb),.1);border-radius:2px;overflow:hidden}
-.progress-fill{height:100%;background:var(--ink);transition:width .45s ease;border-radius:2px}
+/* --- 过渡 --- */
+.fi{animation:fi .5s ease both}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-/* ========== 过渡动画 ========== */
-.fade-in{animation:fadeIn .5s ease both}
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+/* --- 处理动画 --- */
+.processing{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3vh;min-height:60vh}
+.processing .spinner{width:3px;height:32px;background:var(--ink);animation:spin-bar .9s ease infinite}
+@keyframes spin-bar{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.processing .msg{font-family:var(--serif);font-size:1.1rem;opacity:.7}
 
-/* ========== 结果屏 ========== */
-.result-card{display:flex;flex-direction:column;gap:3vh}
-.char-header{display:flex;flex-direction:column;gap:1vh}
-.char-name{font-family:var(--serif);font-weight:900;font-size:clamp(2rem,5.5vw,3.2rem);line-height:1.1}
-.char-jp{font-family:var(--serif);font-weight:400;font-size:clamp(1rem,2vw,1.3rem);opacity:.5;margin-bottom:.5vh}
-.char-source{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.45}
+/* --- 结果 --- */
+.result{}
+.char-head{margin-bottom:3vh}
+.char-head .src{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.4;margin-bottom:.8vh}
+.char-head .name{font-family:var(--serif);font-weight:900;font-size:clamp(2rem,5.5vw,3rem);line-height:1.1}
+.char-head .jp{font-family:var(--serif);font-weight:400;font-size:clamp(.95rem,1.8vw,1.2rem);opacity:.45;margin-top:.5vh}
+.attrs-inline{display:flex;gap:3vw;flex-wrap:wrap;margin:2vh 0}
+.attrs-inline .a{display:flex;flex-direction:column;gap:.3vh}
+.attrs-inline .a .al{font-family:var(--mono);font-size:10px;letter-spacing:.2em;opacity:.4}
+.attrs-inline .a .av{font-family:var(--serif);font-weight:600;font-size:1.05rem}
+.stars{color:var(--accent);letter-spacing:.06em}
+.tagline{font-family:var(--serif);font-weight:500;font-size:clamp(1.05rem,1.8vw,1.3rem);line-height:1.5;opacity:.82;padding:2vh 0;border-top:1px solid rgba(var(--ink-rgb),.1);border-bottom:1px solid rgba(var(--ink-rgb),.1);margin:2vh 0}
+.analysis h3{font-family:var(--serif);font-weight:700;font-size:1.15rem;margin-bottom:1.2vh}
+.analysis p{font-family:var(--sans);font-size:clamp(.85rem,1.05vw,.95rem);line-height:1.82;opacity:.78;margin-bottom:2vh}
+.insight{background:rgba(var(--ink-rgb),.03);padding:2.2vh 2.2vw;border-left:2px solid var(--ink);margin:2vh 0}
+.insight .il{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;opacity:.4;margin-bottom:1vh}
+.insight p{font-family:var(--serif);font-size:clamp(.88rem,1.1vw,.96rem);line-height:1.65;opacity:.82}
 
-.attr-row{display:flex;gap:4vw;flex-wrap:wrap;margin:2vh 0}
-.attr{display:flex;flex-direction:column;gap:.4vh}
-.attr .attr-label{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.4}
-.attr .attr-val{font-family:var(--serif);font-weight:600;font-size:1.1rem}
-.attr .stars{color:var(--accent);font-size:1.1rem;letter-spacing:.1em}
+/* --- 雷达图 --- */
+.radar-wrap{margin:3vh 0;display:flex;flex-direction:column;align-items:center}
+.radar-wrap canvas{max-width:340px;width:100%;height:auto}
+.radar-label{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.35;margin-bottom:1.2vh}
 
-.tagline{font-family:var(--serif);font-weight:500;font-size:clamp(1.1rem,2vw,1.4rem);line-height:1.45;opacity:.8;padding:2vh 0;border-top:1px solid rgba(var(--ink-rgb),.1);border-bottom:1px solid rgba(var(--ink-rgb),.1)}
+/* --- MBTI暗显 --- */
+.mbti-sub{font-family:var(--mono);font-size:11px;letter-spacing:.22em;opacity:.28;margin:2vh 0}
 
-.analysis{}
-.analysis h3{font-family:var(--serif);font-weight:700;font-size:1.2rem;margin-bottom:1.2vh}
-.analysis p{font-family:var(--sans);font-weight:400;font-size:clamp(.88rem,1.1vw,1rem);line-height:1.8;opacity:.78;margin-bottom:2vh}
+/* --- 分享 --- */
+.share-block{margin-top:4vh;padding:3vh 3vw;border:1px solid rgba(var(--ink-rgb),.1);border-radius:3px;display:flex;flex-direction:column;gap:2vh;align-items:center}
+.share-block h3{font-family:var(--serif);font-weight:700;font-size:1.1rem}
+.share-actions{display:flex;gap:2vw;flex-wrap:wrap;justify-content:center}
+.share-actions .btn{font-size:11px}
+.qr-wrap{display:flex;flex-direction:column;gap:1vh;align-items:center}
+.qr-wrap canvas{border:4px solid white;border-radius:4px}
+.qr-label{font-family:var(--mono);font-size:9px;letter-spacing:.16em;opacity:.4}
 
-.insight{background:rgba(var(--ink-rgb),.04);padding:2.4vh 2.4vw;border-left:2px solid var(--ink);margin:2vh 0}
-.insight .insight-label{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;opacity:.45;margin-bottom:1vh}
-.insight p{font-family:var(--serif);font-weight:400;font-size:clamp(.9rem,1.2vw,1rem);line-height:1.65;opacity:.82}
-
-/* ========== 其他角色预览 ========== */
-.other-chars{margin-top:4vh}
-.other-chars h4{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;opacity:.45;margin-bottom:2vh}
-.char-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6vw}
-@media(max-width:500px){.char-grid{grid-template-columns:repeat(2,1fr)}}
-.char-chip{display:flex;flex-direction:column;gap:.6vh;padding:1.6vh 1.6vw;border:1px solid rgba(var(--ink-rgb),.1);border-radius:3px;cursor:default;opacity:.5;font-size:.85rem}
-.char-chip .chip-name{font-family:var(--serif);font-weight:600;font-size:.95rem}
-.char-chip .chip-src{font-family:var(--mono);font-size:9px;letter-spacing:.12em;opacity:.5}
-
-.retry{margin-top:5vh;align-self:flex-start}
+/* --- 其他角色 --- */
+.others{margin-top:4vh}
+.others h4{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;opacity:.4;margin-bottom:2vh}
+.char-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2vw}
+@media(max-width:600px){.char-grid{grid-template-columns:repeat(3,1fr)}}
+.char-chip{display:flex;flex-direction:column;gap:.4vh;padding:1.4vh 1.2vw;border:1px solid rgba(var(--ink-rgb),.08);border-radius:2px;opacity:.45;font-size:.8rem;cursor:default}
+.char-chip .cn{font-family:var(--serif);font-weight:600;font-size:.88rem}
+.char-chip .cs{font-family:var(--mono);font-size:8px;letter-spacing:.1em;opacity:.5}
+.retry-btn{margin-top:4vh}
 
 @media(max-width:500px){
-  .app{padding:4vh 5vw 4vh}
+  .app{padding:4vh 5vw}
   .top-bar{margin-bottom:4vh}
   .q-text{margin-bottom:3vh}
-  .options{gap:1.4vh}
+  .options{gap:1.2vh}
+  .share-actions{flex-direction:column;align-items:center}
 }
 </style>
 </head>
 <body>
-
 <div class="app">
+<div class="top-bar"><span>Loli-Mama Quiz · 超级版</span><span>30 Characters · 45 Questions</span></div>
 
-  <!-- ========== 顶栏 ========== -->
-  <div class="top-bar">
-    <span>Loli-Mama Quiz</span>
-    <span class="sep">·</span>
-    <span>人格分类</span>
-  </div>
+<!-- ======== 屏1: 开场 ======== -->
+<div class="screen active" id="s-intro">
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+<h1 class="fi">你适合什么样的<br>萝莉妈妈？</h1>
+<p class="sub fi" style="animation-delay:.1s">基于拉康精神分析 × 荣格心理类型学 × 角色数据库<br>30 种动画角色 · 45 道精准定位题 · 8 维人格属性雷达</p>
+<p class="fi" style="animation-delay:.18s;font-family:var(--serif);font-size:clamp(.9rem,1.2vw,1.05rem);line-height:1.75;opacity:.7;max-width:44ch;margin-bottom:5vh">
+"萝莉妈妈"不只是一个角色类型——它是一种欲望结构的文化映射。本测验通过多维度人格评估，为你匹配那个命中注定的角色。
+</p>
+<div class="fi" style="animation-delay:.25s">
+<button class="btn primary" onclick="goQuiz()">开始测验<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+</div>
+</div>
+<div class="meta-foot">收录 30 部作品角色 · 45 题 · 约 6 分钟 · 精神分析 × 类型学框架</div>
+</div>
 
-  <!-- =============================================================
-       屏1 · 开场
-  ============================================================= -->
-  <div class="screen active" id="screen-intro">
-    <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
-      <h1 class="fade-in">你适合什么样的<br>萝莉妈妈？</h1>
-      <p class="sub fade-in" style="animation-delay:.12s">
-        基于拉康精神分析与弗洛伊德人格理论<br>
-        从 6 部动画/轻小说中匹配你的专属角色
-      </p>
-      <p class="fade-in" style="animation-delay:.2s;font-family:var(--serif);font-weight:400;font-size:clamp(.9rem,1.3vw,1.1rem);line-height:1.7;opacity:.7;max-width:42ch;margin-bottom:5vh">
-        "萝莉妈妈"不只是一个角色类型——<br>
-        它是一种欲望结构的文化映射。<br>
-        通过 8 道题，看清你无意识中<br>
-        真正渴望的"母性"形态。
-      </p>
-      <button class="btn primary fade-in" style="animation-delay:.3s" onclick="startQuiz()">
-        开始测试
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-    </div>
-    <div class="meta-foot">收录 6 部作品角色 · 8 道题 · 约 3 分钟</div>
-  </div>
+<!-- ======== 屏2: 答题 ======== -->
+<div class="screen" id="s-quiz">
+<div class="q-prog" id="q-prog"></div>
+<div class="q-section" id="q-sec"></div>
+<div class="q-text" id="q-text"></div>
+<div class="options" id="q-opts"></div>
+<div class="prog-wrap"><span id="prog-txt"></span><div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div></div>
+</div>
 
-  <!-- =============================================================
-       屏2 · 答题
-  ============================================================= -->
-  <div class="screen" id="screen-quiz">
-    <div class="q-counter" id="q-counter">Question 01 / 08</div>
-    <div class="q-text" id="q-text"></div>
-    <div class="options" id="q-options"></div>
-    <div class="progress-wrap">
-      <span id="prog-label">01/08</span>
-      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-    </div>
-  </div>
+<!-- ======== 屏3: 运算中 ======== -->
+<div class="screen" id="s-proc">
+<div class="processing">
+<div class="spinner"></div>
+<div class="msg" id="proc-msg">正在分析你的欲望结构…</div>
+</div>
+</div>
 
-  <!-- =============================================================
-       屏3 · 结果
-  ============================================================= -->
-  <div class="screen" id="screen-result">
-    <div id="result-content"></div>
-    <button class="btn retry small" onclick="restartQuiz()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
-      重新测试
-    </button>
-  </div>
-
+<!-- ======== 屏4: 结果 ======== -->
+<div class="screen" id="s-result">
+<div class="result" id="result-html"></div>
+</div>
 </div>
 
 <script>
-// ==================== 角色数据库 ====================
-const characters = {
-  nagisa: {
-    id:'nagisa',
-    name:'古河渚',
-    jp:'Furukawa Nagisa',
-    source:'CLANNAD',
-    apparentAge:'17 岁',
-    maternal:5,
-    typeLabel:'温柔的陪伴者',
-    tagline:'你需要的不是解决问题的那个人，而是无论问题是否解决，都会一直在的那个人。',
-    analysis:`<p>你对"母性"的想象，沿袭了弗洛伊德所说的"前俄狄浦斯阶段"对母亲的原始依恋——在那个世界里，没有冲突，没有对抗，只有无条件的接纳。</p>
-<p>古河渚型的萝莉妈妈，恰好提供了这种"回到子宫"般的欲望对象。她不催促你成长，不要求你成功，她的存在本身就是一种治愈。这正是拉康所描述的"对象 a"——你永远在追寻那个"完美的原初温暖"。</p>
-<p><strong>适合你的人</strong>，会是一个用最朴素的方式给予你最深层情感安全感的存在。</p>`,
-    insight:'你的欲望结构核心是"回归"——回归到一个没有评判、没有要求的原初关系。这不是退行，而是对晚期资本主义"绩效社会"的深层抵抗。在一个人人都在要求你"更好"的世界里，你选择"被温柔地接受"。'
-  },
-  beatrice: {
-    id:'beatrice',
-    name:'碧翠丝',
-    jp:'Beatrice',
-    source:'Re:Zero',
-    apparentAge:'外表 11 岁',
-    maternal:4,
-    typeLabel:'傲娇的守护者',
-    tagline:'你和她一样，用坚硬的外壳包裹柔软的内心。你们之间的爱，从来不用嘴说。',
-    analysis:`<p>在拉康的镜像阶段理论中，主体通过对镜中形象的认同来构建自我。而碧翠丝型的"嘴硬心软"，恰好是你自我认同中"理想自我"与"真实自我"之间张力的投影——你表面上拒绝依赖，内心深处却极度渴望被守护。</p>
-<p>这是一种典型的"反向形成"防御机制：越渴望越推开，越在乎越冷漠。碧翠丝用她的傲娇教会你一件事：<span class="hi">真正的亲密不需要言说。</span></p>
-<p><strong>适合你的关系</strong>，是那种彼此都不用解释，却在关键时刻绝不缺席的默契。</p>`,
-    insight:'你的防御机制是"反向形成"——用推开的方式来测试对方是否值得信赖。这与弗洛伊德描述的肛门期固着有关：在关系中，你需要"控制距离"来获得安全感。一旦对方通过了测试，你会是全世界最忠诚的人。'
-  },
-  roxy: {
-    id:'roxy',
-    name:'洛琪希',
-    jp:'Roxy Migurdia',
-    source:'无职转生',
-    apparentAge:'外表幼态（魔人族）',
-    maternal:4,
-    typeLabel:'智慧的导师',
-    tagline:'你渴望的不是被保护，而是被引导。最好的爱，是帮你成为更好的自己。',
-    analysis:`<p>弗洛伊德在《文明及其不满》中指出，人类的一部分焦虑来源于对自身局限性的认知。而你，恰好是一个清醒到足以看见自己局限性的人——这让你比他人更需要一个"导师"。</p>
-<p>洛琪希型的萝莉妈妈，在拉康的框架中扮演的是"大他者"的温和版本：她不惩罚你的不足，而是用知识和耐心帮你填补那些不足。你的欲望对象不是"母性的怀抱"，而是<span class="hi">"母性的指引"</span>。</p>
-<p><strong>适合你的人</strong>，会在你迷路时递给你一张地图——而不是替你走路。</p>`,
-    insight:'你的俄狄浦斯路径不是对抗父之法，而是内化它。你认同"规则"本身的价值，但需要一个温和的引路人帮你进入符号秩序。这在拉康看来是一种"成熟的神经症结构"——你接受阉割，但需要温柔的引导。'
-  },
-  komoe: {
-    id:'komoe',
-    name:'月咏小萌',
-    jp:'Tsukuyomi Komoe',
-    source:'魔法禁书目录',
-    apparentAge:'外表小学生 / 实际成年',
-    maternal:5,
-    typeLabel:'永远的照顾者',
-    tagline:'你需要一个真正成熟的人，只是恰好她长得很可爱。反差不是萌点，是安心感。',
-    analysis:`<p>温尼科特提出了"足够好的母亲"（good enough mother）的概念——她不需要完美，只需要"刚好够好"。而月咏小萌型的角色，恰恰是这种"足够好"的极致化身：她有成年人的责任感与照顾能力，却以最不易构成威胁的形态出现。</p>
-<p>在拉康的术语中，<span class="hi">你渴望的是一个"不携带菲勒斯威胁的母性大他者"</span>——一个能照顾你、但不会评判你或控制你的人。这种极度反差本身就构成了一种安全的欲望空间。</p>
-<p><strong>适合你的人</strong>，会让你在不知不觉中放下所有防备。</p>`,
-    insight:'你对"成熟"的定义超越了外表。你本能地区分了"社会年龄"和"情感功能"——你需要的是后者的稳定输出，而外观的不匹配恰恰降低了你的防御机制。这是一种高度理性的依恋策略。'
-  },
-  ilya: {
-    id:'ilya',
-    name:'伊莉雅斯菲尔',
-    jp:'Illyasviel von Einzbern',
-    source:'Fate/stay night',
-    apparentAge:'外表 10-12 岁',
-    maternal:3,
-    typeLabel:'复杂的双重灵魂',
-    tagline:'你自己就是一个矛盾体：时而想被宠，时而想宠人。你需要一个同样复杂的灵魂。',
-    analysis:`<p>克莱因在客体关系理论中提出了"偏执-分裂心位"与"抑郁心位"的交替——而你的情感模式恰好在这两极之间摇摆。你可以一瞬间从"被照顾的孩子"切换到"照顾人的大人"，这让传统的单一角色无法满足你。</p>
-<p>伊莉雅型的萝莉妈妈，本身就是这种二重性的极致体现：她既是天真的，又是深邃的；既是需要被爱的，又是主动去爱的。在拉康的框架中，这恰好对应了<span class="hi">"欲望的主体与欲望的对象之间的辩证法"</span>——你同时在两个位置上。</p>
-<p><strong>适合你的人</strong>，必须能接受你在"需要被照顾"和"想要照顾人"之间自由切换。</p>`,
-    insight:'你的欲望结构最复杂——它同时指向"成为它"和"拥有它"两种方向。这在精神分析中是一种双性化的欲望配置，不是缺陷，而是更丰富的可能。你需要的不是一个单一功能的母性，而是一个能与你对位变奏的灵魂。'
-  },
-  nanoha: {
-    id:'nanoha',
-    name:'高町奈叶',
-    jp:'Takamachi Nanoha',
-    source:'魔法少女奈叶',
-    apparentAge:'9 → 23 岁（跨时间线）',
-    maternal:4,
-    typeLabel:'成长的同行者',
-    tagline:'你相信关系和人是会成长的。你要的不是固定的角色，而是并肩同行的旅程。',
-    analysis:`<p>在埃里克森的发展阶段理论中，每个阶段都有其核心任务。而你的人格结构表明，你已经超越了"依赖 vs 独立"的二元对立，进入了一个更健康的阶段——你寻求的是"共同成长"。</p>
-<p>高町奈叶型的角色独特性在于，她自身的叙事弧就是"从被保护者到保护者"的完整成长线。从拉康的角度看，<span class="hi">你不是在寻找一个"固定的母性大他者"，而是在寻找一个"与你一起穿越幻想"的旅伴</span>——你们共同构建主体性，而非一方供养另一方。</p>
-<p><strong>适合你的人</strong>，不是你的起点也不是你的终点，而是和你一起走完全程的人。</p>`,
-    insight:'你可能是 6 种类型中最"健康"的一种。你不寻求退行性的母性怀抱，也不试图通过控制关系来获得安全感。你的欲望结构指向"生成"（becoming）而不是"回归"（returning）。这是德勒兹式的欲望——欲望作为生产力，而非缺失。'
-  }
-};
-
-// ==================== 题目 ====================
-const questions = [
-  { // Q1: 依恋风格
-    text:'心情低落时，你更希望对方怎么做？',
-    options:[
-      {text:'安静地陪在身边，什么都不说', scores:{nagisa:1}},
-      {text:'给我具体建议和方向', scores:{roxy:1, nanoha:1}},
-      {text:'用有趣的事转移我的注意力', scores:{beatrice:1}},
-      {text:'抱着我，让我尽情发泄', scores:{komoe:1, ilya:1}},
-    ]
-  },
-  { // Q2: 欲望对象
-    text:'你理想中的"被爱"方式更接近？',
-    options:[
-      {text:'被无条件地包容和接纳', scores:{nagisa:1, komoe:1}},
-      {text:'被引导着走向更好的自己', scores:{roxy:1}},
-      {text:'被热烈地需要和依赖', scores:{ilya:1, beatrice:1}},
-      {text:'被默默守护，从不打扰', scores:{nanoha:1, nagisa:1}},
-    ]
-  },
-  { // Q3: 权威关系
-    text:'面对人生重要抉择，你的倾向是？',
-    options:[
-      {text:'听从内心感受', scores:{ilya:1, nagisa:1}},
-      {text:'理性分析利弊', scores:{roxy:1, nanoha:1}},
-      {text:'征求信任的人的意见', scores:{komoe:1}},
-      {text:'走一步看一步，不急决定', scores:{beatrice:1, ilya:1}},
-    ]
-  },
-  { // Q4: 防御机制
-    text:'在亲密关系中，你最害怕什么？',
-    options:[
-      {text:'被抛弃', scores:{nagisa:1, komoe:1}},
-      {text:'失去自我', scores:{nanoha:1, beatrice:1}},
-      {text:'被误解', scores:{ilya:1, roxy:1}},
-      {text:'被控制', scores:{beatrice:1, nanoha:1}},
-    ]
-  },
-  { // Q5: 情感需求
-    text:'你更渴望从对方那里获得什么？',
-    options:[
-      {text:'温暖和安全感', scores:{nagisa:1, komoe:1}},
-      {text:'智慧和指引', scores:{roxy:1}},
-      {text:'刺激和新鲜感', scores:{beatrice:1, ilya:1}},
-      {text:'理解和认同', scores:{ilya:1, nanoha:1}},
-    ]
-  },
-  { // Q6: 镜像阶段
-    text:'你如何看待自己与理想自我的差距？',
-    options:[
-      {text:'差距很大，经常感到焦虑', scores:{komoe:1, nagisa:1}},
-      {text:'有差距，但我正在努力缩短', scores:{nanoha:1, roxy:1}},
-      {text:'我就是我，不那么在意差距', scores:{beatrice:1}},
-      {text:'"理想自我"本身是个幻觉', scores:{ilya:1, roxy:1}},
-    ]
-  },
-  { // Q7: 对象a
-    text:'哪件事最能让你感到"被爱着"？',
-    options:[
-      {text:'对方记得我说过的小事', scores:{komoe:1, nagisa:1}},
-      {text:'对方做了实际帮助我的事', scores:{nanoha:1, roxy:1}},
-      {text:'对方愿意为我改变自己的计划', scores:{ilya:1, beatrice:1}},
-      {text:'对方相信并肯定我的能力', scores:{roxy:1, nanoha:1}},
-    ]
-  },
-  { // Q8: 俄狄浦斯向度
-    text:'你与"规则/权威"的关系更接近？',
-    options:[
-      {text:'尊重规则，但保持距离', scores:{nanoha:1, komoe:1}},
-      {text:'质疑规则，想自己验证', scores:{roxy:1, ilya:1}},
-      {text:'表面遵守，内心叛逆', scores:{beatrice:1, ilya:1}},
-      {text:'规则给人安全感，我愿意遵循', scores:{komoe:1, nagisa:1}},
-    ]
-  },
+// ==================== 角色数据库 (30) ====================
+// 属性: maternal=母性, youthful=幼态度, wisdom=智慧度, protect=保护欲,
+//        tsun=傲娇度, depend=依赖度, heal=治愈力, mystery=神秘感
+// mbti: 隐藏维度,用于计分 [E/I, S/N, T/F, J/P]
+const CHARS=[
+{id:'nagisa', name:'古河渚', jp:'Furukawa Nagisa', source:'CLANNAD', age:'17岁', maternal:5,youthful:3,wisdom:3,protect:4,tsun:1,depend:3,heal:5,mystery:2, mbti:'ISFJ', type:'温柔的陪伴者', tagline:'你需要的不是解决问题的那个人，而是无论问题是否解决，都会一直在的那个人。', analysis:'<p>你对"母性"的想象，沿袭了弗洛伊德所说的"前俄狄浦斯阶段"对母亲的原始依恋——在那个世界里，没有冲突，没有对抗，只有无条件的接纳。</p><p>古河渚型的萝莉妈妈，恰好提供了这种"回到子宫"般的欲望对象。她不催促你成长，不要求你成功，她的存在本身就是一种治愈。这正是拉康所描述的"对象a"——你永远在追寻那个"完美的原初温暖"。</p><p>你的内在渴望的是一个能给予你无条件的爱与接纳的对象，一个在你最脆弱时仍会站在你身边的存在。</p>', insight:'你的欲望结构核心是"回归"——回归到一个没有评判、没有要求的原初关系。这不是退行，而是对晚期资本主义"绩效社会"的深层抵抗。在一个人人都在要求你"更好"的世界里，你选择"被温柔地接受"。'},
+{id:'beatrice', name:'碧翠丝', jp:'Beatrice', source:'Re:Zero', age:'外表11岁', maternal:4,youthful:5,wisdom:4,protect:5,tsun:5,depend:1,heal:3,mystery:4, mbti:'INTJ', type:'傲娇的守护者', tagline:'你和她一样，用坚硬的外壳包裹柔软的内心。你们之间的爱，从来不用嘴说。', analysis:'<p>在拉康的镜像阶段理论中，主体通过对镜中形象的认同来构建自我。而碧翠丝型的"嘴硬心软"，恰好是你自我认同中"理想自我"与"真实自我"之间张力的投影——你表面上拒绝依赖，内心深处却极度渴望被守护。</p><p>这是一种典型的"反向形成"防御机制：越渴望越推开，越在乎越冷漠。碧翠丝用她的傲娇教会你一件事：真正的亲密不需要言说。</p><p>适合你的关系，是那种彼此都不用解释，却在关键时刻绝不缺席的默契。</p>', insight:'你的防御机制是"反向形成"——用推开的方式来测试对方是否值得信赖。这与弗洛伊德描述的肛门期固着有关：在关系中，你需要"控制距离"来获得安全感。一旦对方通过了测试，你会是全世界最忠诚的人。'},
+{id:'roxy', name:'洛琪希', jp:'Roxy Migurdia', source:'无职转生', age:'外表幼态(魔人族)', maternal:4,youthful:4,wisdom:5,protect:3,tsun:1,depend:2,heal:3,mystery:3, mbti:'INTP', type:'智慧的导师', tagline:'你渴望的不是被保护，而是被引导。最好的爱，是帮你成为更好的自己。', analysis:'<p>弗洛伊德在《文明及其不满》中指出，人类的焦虑来源于对自身局限性的认知。而你恰好是一个清醒到足以看见自己局限性的人——这让你比他人更需要一个"导师"。</p><p>洛琪希型的萝莉妈妈，在拉康的框架中扮演的是"大他者"的温和版本：她不惩罚你的不足，而是用知识和耐心帮你填补那些不足。你的欲望对象不是"母性的怀抱"，而是"母性的指引"。</p><p>适合你的人，会在你迷路时递给你一张地图——而不是替你走路。</p>', insight:'你的俄狄浦斯路径不是对抗父之法，而是内化它。你认同"规则"本身的价值，但需要一个温和的引路人帮你进入符号秩序。这在拉康看来是一种"成熟的神经症结构"——你接受阉割，但需要温柔的引导。'},
+{id:'komoe', name:'月咏小萌', jp:'Tsukuyomi Komoe', source:'魔法禁书目录', age:'外表小学生/实际成年', maternal:5,youthful:5,wisdom:4,protect:4,tsun:1,depend:1,heal:4,mystery:4, mbti:'ENFJ', type:'永远的照顾者', tagline:'你需要一个真正成熟的人，只是恰好她长得很可爱。反差不是萌点，是安心感。', analysis:'<p>温尼科特提出了"足够好的母亲"概念——她不需要完美，只需要"刚好够好"。月咏小萌型的角色，恰恰是这种"足够好"的极致化身：她有成年人的责任感与照顾能力，却以最不易构成威胁的形态出现。</p><p>在拉康的术语中，你渴望的是一个"不携带菲勒斯威胁的母性大他者"——一个能照顾你、但不会评判你或控制你的人。这种极度反差本身就构成了一种安全的欲望空间。</p><p>适合你的人，会让你在不知不觉中放下所有防备。</p>', insight:'你对"成熟"的定义超越了外表。你本能地区分了"社会年龄"和"情感功能"——你需要的是后者的稳定输出，而外观的不匹配恰恰降低了你的防御机制。这是一种高度理性的依恋策略。'},
+{id:'ilya', name:'伊莉雅斯菲尔', jp:'Illyasviel von Einzbern', source:'Fate/stay night', age:'外表10-12岁', maternal:3,youthful:5,wisdom:4,protect:3,tsun:3,depend:3,heal:3,mystery:5, mbti:'INFP', type:'复杂的双重灵魂', tagline:'你自己就是一个矛盾体：时而想被宠，时而想宠人。你需要一个同样复杂的灵魂。', analysis:'<p>克莱因在客体关系理论中提出了"偏执-分裂心位"与"抑郁心位"的交替——而你的情感模式恰好在这两极之间摇摆。你可以一瞬间从"被照顾的孩子"切换到"照顾人的大人"，这让传统的单一角色无法满足你。</p><p>伊莉雅型的萝莉妈妈，本身就是这种二重性的极致体现：她既是天真的，又是深邃的；既是需要被爱的，又是主动去爱的。在拉康的框架中，这恰好对应了"欲望的主体与欲望的对象之间的辩证法"——你同时在两个位置上。</p><p>适合你的人，必须能接受你在"需要被照顾"和"想要照顾人"之间自由切换。</p>', insight:'你的欲望结构最复杂——它同时指向"成为它"和"拥有它"两种方向。这在精神分析中是一种双性化的欲望配置，不是缺陷，而是更丰富的可能。你需要的不是一个单一功能的母性，而是一个能与你对位变奏的灵魂。'},
+{id:'nanoha', name:'高町奈叶', jp:'Takamachi Nanoha', source:'魔法少女奈叶', age:'9→23岁(跨时间线)', maternal:4,youthful:3,wisdom:4,protect:5,tsun:1,depend:2,heal:4,mystery:3, mbti:'ENFJ', type:'成长的同行者', tagline:'你相信关系和人是会成长的。你要的不是固定的角色，而是并肩同行的旅程。', analysis:'<p>在埃里克森的发展阶段理论中，每个阶段都有其核心任务。而你的人格结构表明，你已经超越了"依赖vs独立"的二元对立，进入了一个更健康的阶段——你寻求的是"共同成长"。</p><p>高町奈叶型的角色独特性在于，她自身的叙事弧就是"从被保护者到保护者"的完整成长线。从拉康的角度看，你不是在寻找一个"固定的母性大他者"，而是在寻找一个"与你一起穿越幻想"的旅伴——你们共同构建主体性，而非一方供养另一方。</p><p>适合你的人，不是你的起点也不是你的终点，而是和你一起走完全程的人。</p>', insight:'你可能是所有类型中最"健康"的一种。你不寻求退行性的母性怀抱，也不试图通过控制关系来获得安全感。你的欲望结构指向"生成"（becoming）而不是"回归"（returning）。这是德勒兹式的欲望——欲望作为生产力，而非缺失。'},
+{id:'shinobu', name:'忍野忍', jp:'Oshino Shinobu', source:'物语系列', age:'外表8岁/实际500+岁', maternal:4,youthful:5,wisdom:5,protect:5,tsun:4,depend:1,heal:2,mystery:5, mbti:'INTJ', type:'永恒的守望者', tagline:'你不需要每天都黏在一起。你需要的是一个无论过了多少年，都记得你名字的存在。', analysis:'<p>忍野忍的角色蕴含了拉康关于"时间"的深刻命题——她跨越了人类的时间性，却仍然困于人类的情感。在精神分析中，这对应了"永恒"的幻象：一个永远不会离开、永远不会老去的母性存在。</p><p>你需要的关系不是日常的陪伴，而是"缺席的在场"——你知道她就在某处，这就足够了。这正是温尼科特所说的"过渡性客体"在成人期的表现：一个内在化的安全基地。</p><p>适合你的人，在沉默中比在言语中更懂你。</p>', insight:'你的欲望结构中有一种"永恒趋向"——你渴望的关系形式超越了日常陪伴，指向某种更持久、更不可摧毁的连结。这是一种对"时间性创伤"的深层防御：通过欲望一个不朽的对象，来逃避所有关系终将终结的焦虑。'},
+{id:'victorique', name:'维多利加', jp:'Victorique de Blois', source:'GOSICK', age:'外表14岁', maternal:3,youthful:4,wisdom:5,protect:2,tsun:4,depend:3,heal:2,mystery:5, mbti:'INTP', type:'智慧的引导者', tagline:'你不需要一个给你答案的人，你需要的是一个让问题本身变得有趣的人。', analysis:'<p>维多利加型的萝莉妈妈代表了一种罕见的母性形态——"智性的母性"。她不会为你煮饭或打理生活，但她会为你揭穿世界的迷雾。在拉康的框架中，这是一种"符号界的母性"：她帮你构建意义，而不是提供情感。</p><p>你需要的关系是"共同思考"的关系。这类似于比昂提出的"容器"功能——不是吸收你的情绪，而是帮你"思考你的思考"，让你成为自己思维的主人。</p><p>适合你的人，会让你觉得这个世界值得被理解。</p>', insight:'你的欲望对象是一种"认知性的母性"——你渴望的不是被情感拥抱，而是被智慧照亮。这在精神分析史上是一种较少被描述的欲望形态，但它对应了拉康所说的"大学话语"：主体从知识中获得其存在的位置。'},
+{id:'menma', name:'本间芽衣子', jp:'Honma Meiko', source:'未闻花名', age:'外表童年/幽灵', maternal:3,youthful:5,wisdom:2,protect:3,tsun:1,depend:4,heal:5,mystery:5, mbti:'ENFP', type:'纯真的疗愈者', tagline:'你心中有一个尚未长大的孩子，而你需要的伙伴，恰好也是一个孩子——一个永远不会离开你的孩子。', analysis:'<p>弗洛伊德在《哀悼与忧郁》中描述了"哀悼工作"——失去一个爱的对象后，心灵需要时间来撤回并重新投资。而本间芽衣子型的角色，恰恰是一种"尚未完成的哀悼"的投影：她既是已失去的，又是永远在场的。</p><p>你的欲望结构中有一个未解决的"童年固着"——不是你想停留在童年，而是童年中有一个未完成的告别。你需要的是一个陪你一起做"未完成的事"的人，一个帮你画完那个句号的存在。</p><p>适合你的人，会陪你哭一场，然后笑着离开。</p>', insight:'你的欲望结构的核心是"哀悼与修复"。克莱因认为，抑郁心位的核心任务是修复被幻想摧毁的客体。而你的欲望对象，正是一个"可以被修复的、永不完全失去的"母性存在——这是对失去的最深防御，也是最有创造力的。'},
+{id:'chino', name:'香风智乃', jp:'Kafuu Chino', source:'请问您今天要来点兔子吗', age:'外表13岁', maternal:4,youthful:5,wisdom:3,protect:2,tsun:2,depend:2,heal:4,mystery:3, mbti:'ISFJ', type:'成熟的幼心', tagline:'你欣赏那些用最少的语言表达最多的心意的存在。安静的温暖，胜过千言万语。', analysis:'<p>香风智乃型的角色是一种"静默的母性"——她不会大声宣告自己的关心，但她的每一个行为都在说"我在乎你"。在温尼科特的理论中，这正是"原初母性贯注"的特征：母亲对婴儿的全神贯注，不需要语言。</p><p>你的人格中有一种对"噪音"的天然排斥——无论是社交噪音还是情感噪音。你需要的关系是"安静的共处"：两个人各做各的事，但心里都知道对方在那儿。</p><p>适合你的人，会让你享受到沉默中的丰富。</p>', insight:'你对关系的要求是"低刺激、高可靠"。这在精神分析中对应了一种"自足的安全型依恋"——你不需要戏剧化的情感表达来确认关系的存在。这是一种罕见的成熟，但也可能是一种对脆弱性的防御。'},
+{id:'chtholly', name:'珂朵莉', jp:'Chtholly Nota Seniorious', source:'末日时在做什么', age:'外表15岁', maternal:5,youthful:4,wisdom:2,protect:5,tsun:2,depend:1,heal:4,mystery:4, mbti:'ISFP', type:'牺牲的守护者', tagline:'你相信"最美的东西总是正在消失的东西"。而你想要的，就是在它消失之前倾尽一切去爱。', analysis:'<p>弗洛伊德在《超越快乐原则》中提出了"死亡驱力"——一种回到无机状态的原始冲动。珂朵莉型的角色，恰恰是"爱欲"与"死亡驱力"的正面融合：她知道自己终将消逝，因此更加热烈地活。</p><p>你需要的关系有一种"末日诗学"的底色——你不是在追求永恒的安稳，而是在追求"在有限中体验到无限"。正是这种终将失去的预期，让你的爱变得极其浓烈。</p><p>适合你的人，会让你觉得每一天都是多赚的。</p>', insight:'你的欲望结构中，爱欲与死亡驱力不是对立的，而是同一种能量的两种表现。这在拉康的框架中对应了"符号界的断裂"——正是因为我们知道关系终将终结，我们才能在关系中真正地"活"。你不是绝望的，你是觉醒的。'},
+{id:'eru', name:'千反田爱瑠', jp:'Chitanda Eru', source:'冰菓', age:'16岁', maternal:4,youthful:4,wisdom:3,protect:2,tsun:1,depend:3,heal:3,mystery:4, mbti:'ENFP', type:'好奇心的化身', tagline:'你渴望的对象，是那个让你觉得"世界真有趣"的人。母性，有时候是对世界的好奇心。', analysis:'<p>千反田爱瑠型的"母性"是独特的——它不是照顾，而是"注视"：她用那双大眼睛注视你，不是在看你的缺点，而是在寻找你有趣的地方。在精神分析中，这对应了温尼科特的"镜映"概念：母亲是婴儿的镜子，婴儿在母亲的目光中看到了自己。</p><p>你需要的关系是一种"发现性的关系"——你希望有人用新鲜的眼光看你，看到你自己都未曾注意的侧面。这是一种"被好奇心爱着"的体验。</p><p>适合你的人，会重新向你介绍你自己。</p>', insight:'你的欲望结构中有一个重要的"镜映需求"——你不仅渴望被爱，更渴望被"看见"。这是拉康镜像理论的正面版本：你需要一个能反射出你最好可能性的他者，一个帮你完成自我建构的对话者。'},
+{id:'renge', name:'宫内莲华', jp:'Miyauchi Renge', source:'悠哉日常大王', age:'7岁', maternal:2,youthful:5,wisdom:5,protect:2,tsun:1,depend:4,heal:4,mystery:5, mbti:'INFJ', type:'哲学的幼童', tagline:'你的灵魂年龄远超外表。你需要的是一个看似最"小"、其实最"大"的对话者。', analysis:'<p>宫内莲华是一个颠覆了"成人/儿童"二元对立的角色——她拥有七岁的身体，却常常说出最深奥的真理。这恰好对应了荣格所说的"智慧老人"原型的逆向版本："智慧幼童"。</p><p>你需要的关系是一种"去等级化"的——你不需要被"教导"，你需要的是被一个看似不谙世事却洞察一切的存在"共鸣"。这是一种超越了"大人/小孩"权力结构的平等连接。</p><p>适合你的人，用最童真的话语道破你最复杂的困惑。</p>', insight:'你的欲望结构中有一个"通往原初智慧"的向度。你不信任成人世界的复杂性，你渴望一种更本质、更直接的启示。这在精神分析中对应了"前符号界"的幻象——在语言和社会规则介入之前，那种直接的、不经过中介的理解。'},
+{id:'yoshino', name:'小岩井吉乃', jp:'Koiwai Yoshino', source:'政宗君的复仇', age:'16岁', maternal:5,youthful:3,wisdom:4,protect:4,tsun:2,depend:3,heal:3,mystery:3, mbti:'INFJ', type:'献身的照料者', tagline:'你需要的是一种幕后式的照顾——对方为你安排好一切，却从不到台前抢你的光芒。', analysis:'<p>小岩井吉乃型的角色代表了"服务的母性"——她通过为他人的幸福默默付出而找到自己的存在意义。在弗洛伊德的理论中，这可以理解为一种"升华"：将本能能量转化为积极的、社会接受的行动。</p><p>你需要的关系有一种"非对称的温柔"——对方永远站在你身后半步，为你准备好一切，却从不要求回馈。这不是"控制"，而是"成就"：她通过成就你来成就自己。</p><p>适合你的人，会让你在不知不觉中被照顾得很好。</p>', insight:'你对关系的期待中有一个"后台/前台"的分裂结构。你希望自己是台前的主角，而对方是幕后的支持者。这不是自恋，而是一种对"被无条件支持"的深层渴望——在这个关系中，对方的自我实现恰好通过你的自我实现来完成。'},
+{id:'kanna', name:'康娜', jp:'Kanna Kamui', source:'小林家的龙女仆', age:'外表8岁', maternal:3,youthful:5,wisdom:3,protect:5,tsun:1,depend:4,heal:4,mystery:4, mbti:'ISFP', type:'纯真的守护神', tagline:'最强大的保护，往往来自最柔软的形态。你需要的就是这种反差中的绝对安全感。', analysis:'<p>康娜以最天真无邪的形象，承载着绝对力量。在荣格的原型理论中，这对应了"儿童原型"的完整形态——既是脆弱的，又是全能的。这种二重性正是你欲望结构的核心。</p><p>你渴望的不是普通的保护，而是一种"不必言说的绝对安全"——就像婴儿在母亲怀里，不需要知道外面的世界有多危险。康娜型的角色给了你这种安全：她看起来什么都不懂，却能在关键时刻做你的守护神。</p><p>适合你的人，在毛茸茸的外表下藏着龙的力量。</p>', insight:'你的欲望结构中有一种"全能母性"的幻象——你渴望的对象是既绝对强大又绝对温柔的。这在克莱因的框架中对应了"理想化原始客体"：婴儿对"完美乳房"的原始幻想，它在现实中不存在，却在康娜这样的角色中找到了文化表达。'},
+{id:'yoshino2', name:'四糸乃', jp:'Yoshino', source:'约会大作战', age:'外表13岁', maternal:3,youthful:5,wisdom:2,protect:3,tsun:1,depend:5,heal:5,mystery:4, mbti:'INFP', type:'温柔的胆怯者', tagline:'你和她一样敏感。你们之间的联结，是两个温柔灵魂的相互靠近，而不是一方的保护与另一方的依赖。', analysis:'<p>四糸乃的角色触达了"脆弱"的终极美学——她不是"弱"，而是"过于柔软以至于世界显得太硬"。在拉康的术语中，这对应了"实在界的创伤"：她的存在方式本身就是对这个粗暴世界的一种无声抗议。</p><p>你选择她，意味着你内心深处同样感受到世界的粗糙。你需要的关系不是"被保护"，而是"共同脆弱"——两个都知道世界有多硬的人，彼此提供一个柔软的角落。</p><p>适合你的人，会理解你为什么说话那么小声。</p>', insight:'你的防御机制是"敏感化"——你对世界的粗糙面有超乎常人的感知力。这在精神分析中接近克里斯托娃所说的"贱斥"——对某些粗糙之物的本能排斥。你不是"太敏感"，你是"没有被足够精细地对待过"。'},
+{id:'ai', name:'雏鹤爱', jp:'Hinazuru Ai', source:'龙王的工作！', age:'9岁', maternal:3,youthful:5,wisdom:2,protect:4,tsun:2,depend:5,heal:4,mystery:3, mbti:'ESFJ', type:'热血的小妈妈', tagline:'你渴望的关系是"双向的仰慕"。你在教她一些东西，她也在教你一些东西，分不清谁是大人谁是小孩。', analysis:'<p>雏鹤爱型的角色代表了一种"互惠的成长"——她把你当师父，却也在用自己的方式照顾你。温尼科特认为，健康发展的关键之一是孩子能够"使用客体"——不是摧毁它，而是在幻想中摧毁它然后发现它幸存。</p><p>你需要的关系有一种"彼此成就"的动力学：你被需要，同时也需要对方。这不是单向的依赖，而是一种革命性的关系形式——在传统母性模式之外，开辟了一个"谁也离不开谁"的第三空间。</p><p>适合你的人，在叫了你一声"师父"之后，就再也没有离开过你的视线。</p>', insight:'你的欲望结构中有一种"互为主体性"的配置——你在关系中同时是主体和客体，同时给予和接受照顾。这在科胡特的自体心理学中是一种健康的结构：你通过"理想化"和"镜映"两种自体客体移情来建构自我。'},
+{id:'rena', name:'龙宫蕾娜', jp:'Ryuuguu Rena', source:'寒蝉鸣泣之时', age:'外表14岁', maternal:5,youthful:4,wisdom:3,protect:5,tsun:1,depend:2,heal:3,mystery:5, mbti:'ENFJ', type:'母性本能的化身', tagline:'"想带回家"不是一句玩笑——那是你最真实的情感本能。你想要的是可以无条件拥抱的对象。', analysis:'<p>龙宫蕾娜那句著名的"好想带回家"（お持ち帰りぃ！），是人类最原始的母性冲动最直接的表达——不带任何性意味，纯粹的"想把你纳入我的保护范围"。在弗洛伊德看来，这是"爱欲"最纯净的形态。</p><p>你和她一样，有一种强大的"保护本能"——你想照顾人，你想拥抱人，你想把你看重的人通通带回家放好。这不是控制欲，而是母性的原生冲动。</p><p>适合你的人，可能也在想着把你带回家。</p>', insight:'你的欲望结构中最突出的是"母性本能"的主动面——你不是渴望"被照顾"，而是渴望"去照顾"。这在精神分析中是本能的升华形式：将原始能量转化为保护性行为。你的"想带回家"是对这个碎片化世界的一种温柔的抵抗。'},
+{id:'shiro', name:'白', jp:'Shiro', source:'NO GAME NO LIFE', age:'11岁', maternal:2,youthful:5,wisdom:5,protect:2,tsun:1,depend:5,heal:3,mystery:4, mbti:'INTP', type:'共生的天才', tagline:'你渴望的关系是"谁也离不开谁"的那种——你们互为对方的外置大脑和心脏。', analysis:'<p>白与空的"共生关系"在精神分析中是一种独特的关系模型——两个个体共享一个心理边界。对于你来说，传统的独立个体式的关系没有吸引力：你需要的是那种"离开对方就无法运转"的深度绑定。</p><p>在鲍比尔的依恋理论中，这是一种"高强度的安全基地"需求——你不是病态的共生，而是一种有选择的、清醒的相互依存。你们两人加起来才是一个完整的单位。</p><p>适合你的人，会让你觉得"一个人"是半成品。</p>', insight:'你的欲望结构中有一种"双子星"的配置——你需要的关系不是两个独立个体的相遇，而是两个半成品合成为一个完整机能体。这在科胡特的"孪生自体客体"概念中有所体现：你需要一个"和你一样的"他者来确认你的存在。'},
+{id:'tamako', name:'北白川玉子', jp:'Kitashirakawa Tamako', source:'玉子市场', age:'16岁', maternal:4,youthful:4,wisdom:2,protect:3,tsun:1,depend:2,heal:4,mystery:2, mbti:'ESFJ', type:'日常的温暖', tagline:'你不追求史诗般的爱。你要的就是每天早上一句"早安"，和一块刚出炉的年糕。', analysis:'<p>北白川玉子代表了"日常的母性"——一种如此平凡以至于容易被忽略的温暖。在精神分析中，这正是温尼科特所说的"平凡的奉献"：那些日复一日的、不被看见的照顾行为，构成了心理健康的基础。</p><p>你的人格中有着对"史诗叙事"的免疫力——你不需要拯救世界，你只需要有人和你一起在商店街散步。这是一种罕见的成熟：你在日常中看到了永恒。</p><p>适合你的人，会让你觉得每天都是好日子。</p>', insight:'你的欲望结构中有一个对"日常性"的深切信任。你不是不能理解戏剧化的爱，而是你深知真正滋养人的是那些"不被记下的瞬间"。这在精神分析中对应了一种"去戏剧化的健康人格结构"——你已经超越了"必须通过冲突来体验存在"的阶段。'},
+{id:'yui', name:'平泽唯', jp:'Hirasawa Yui', source:'轻音少女', age:'15岁', maternal:3,youthful:5,wisdom:1,protect:2,tsun:1,depend:5,heal:5,mystery:2, mbti:'ENFP', type:'天然的治愈者', tagline:'你不需要一个"做得好"的人。你需要一个笨拙但真实的人，她的笨拙就是你最好的安慰。', analysis:'<p>平泽唯型的"母性"是一种特殊的类型——她不是传统意义上的妈妈，而是一个"天然呆"的能量发射器。她不教导，不引导，甚至经常需要被照顾——但她有一种奇特的能力：让周围的人觉得"自己已经很好了"。</p><p>在精神分析中，这对应了罗杰斯所说的"无条件积极关注"——不是通过"做什么"来治愈，而是通过"是什么"来治愈。平泽唯不需要改变任何事，她只需要存在，你就会被疗愈。</p><p>适合你的人，会让你放下"必须做好"的执念。</p>', insight:'你的欲望结构中有一种对"去能力化"的深层需要——你太累了，不想再被要求"更好"。你需要的是一个让你觉得"你已经很好了"的存在。这是对"绩效社会"的最温柔的反抗——通过欲望一个"笨拙但快乐"的母性对象，来解构"完美母亲"的幻象。'},
+{id:'sagiri', name:'和泉纱雾', jp:'Izumi Sagiri', source:'埃罗芒阿老师', age:'12岁', maternal:2,youthful:5,wisdom:2,protect:2,tsun:3,depend:5,heal:3,mystery:4, mbti:'INFP', type:'脆弱的守护对象', tagline:'你需要的不是一个已经强大的人，而是一个和你一样脆弱、但正在努力的人。', analysis:'<p>和泉纱雾型的角色代表了一种"需要被照顾的母性"的反转——她看起来需要你保护，但在关键时刻，她的存在本身就是你的动力。在科胡特的自体心理学中，这对应了"理想化自体客体"的功能：一个看起来脆弱、但实际上支撑了你整个世界的他者。</p><p>你需要的关系不是单向的依赖，而是"互相成为对方的意义"。她是你的动力，你是她的世界。这种相互依赖是一种特殊的、超越了传统关系模式的情感联结。</p><p>适合你的人，她的脆弱是你守护的理由，而你的守护是她活着的意义。</p>', insight:'你的欲望结构中有一种"反向照顾"的配置——你通过"被需要"来获得安全感。这在精神分析中是一种"利他主义防御"：你将自己的依赖需求投射到对方身上，通过照顾对方的依赖来间接满足自己的依赖需求。'},
+{id:'hozu', name:'篠之之帚', jp:'Shinonono Houki', source:'IS', age:'15岁', maternal:3,youthful:4,wisdom:3,protect:4,tsun:4,depend:3,heal:3,mystery:3, mbti:'ISFJ', type:'青梅的守护者', tagline:'你需要的是一个了解你全部黑历史、但依然选择站在你这边的人。是的，从幼儿园开始就认识你。', analysis:'<p>篠之之帚型的角色代表了"时间维度的忠诚"——她见证了你的全部成长，知道你所有的糗事，却仍然选择你。在精神分析中，这种关系提供了"连续性"的安全感：在时间的长河中，有一个不变的他者作为参照点。</p><p>你需要的关系有一种"沉淀感"——不是一见钟情的火花，而是多年积累的厚度。拉康会说这是"大他者"的去神秘化：大他者不是高高在上的权威，而是那个看过你所有不堪、却还在这里的人。</p><p>适合你的人，她记住的不只是现在的你，还有十年前的你。</p>', insight:'你的依恋风格有一种"历史纵深"——你需要的关系不是从零开始的，而是有厚度、有记忆的。这在精神分析中对应了客体关系的"持续性"：客体表征在时间中的稳定性。你不是怀旧，你是在确认自己的连续性。'},
+{id:'aria', name:'亚里亚', jp:'Kanzaki H. Aria', source:'绯弹的亚里亚', age:'外表14岁', maternal:2,youthful:4,wisdom:3,protect:5,tsun:5,depend:3,heal:2,mystery:3, mbti:'ESTP', type:'战斗的小娇妻', tagline:'你需要的保护是真实的、物理的、可以开枪的那种。温柔是后来才学会的，先说"不许碰我的搭档"。', analysis:'<p>神崎·H·亚里亚代表了"行动的母性"——她的照顾方式不是织毛衣，而是挡子弹。在精神分析中，这对应了"保护者"原型的一种特殊变形：她的爱不在话语中，而在行动中。她的"傲"不是伪装，而是对她自己的柔软的一种保护。</p><p>你和她的关系模式是"战斗伙伴"：你们背靠背面对世界。当她用枪口指着敌人的时候，那正是她表达"我在乎你"的方式。这种经过战斗考验的联结，比任何温柔的话语都更不可摧毁。</p><p>适合你的人，会在战场上把你的后背当成自己的保卫对象。</p>', insight:'你的欲望结构中有一种"战斗共生"的配置——你需要的关系不是温室中的互相取暖，而是暴风雨中的互相掩护。这在荣格的原型理论中对应了"战士"与"守护者"的融合：攻击性和保护欲指向同一个他者。'},
+{id:'anna', name:'栉名安娜', jp:'Kushina Anna', source:'K', age:'外表11岁', maternal:3,youthful:5,wisdom:4,protect:4,tsun:2,depend:4,heal:3,mystery:5, mbti:'INFJ', type:'沉默的守望者', tagline:'你不需要听觉上的安慰。你需要的是视觉上的确认——那个人就在你的视野里，不需要说话。', analysis:'<p>栉名安娜是一个"无言的符号"——她的红色珠子承载了她的全部情感。在拉康的框架中，她是"真实界"侵入"符号界"的具象化：她用超越语言的方式表达了语言无法承载的东西。</p><p>你和她一样，对言语表达有着某种不信任——或者说，你深知真正的联结发生在话语之外。你需要的关系是一种"在场的静默"：不需要解释，不需要确认，只需要知道对方在呼吸。</p><p>适合你的人，她的存在就是她的全部告白。</p>', insight:'你的欲望结构中有一种超越了语言的维度。在精神分析中，这种"前语言阶段的联结需求"对应了克里斯托娃所说的"符号态"——先于语言、先于符号界的、身体层面的直接联结。你渴望的不是"被理解"，而是"不必被理解也可以被接纳"。'},
+{id:'kobato', name:'羽濑川小鸠', jp:'Hasegawa Kobato', source:'我的朋友很少', age:'外表幼小', maternal:2,youthful:5,wisdom:1,protect:2,tsun:3,depend:5,heal:4,mystery:4, mbti:'INFP', type:'中二的守护天使', tagline:'你的日常是灰色的，你需要一个把每一天都演成奇幻剧的人。她说她是吸血鬼，而你是她的眷属。', analysis:'<p>羽濑川小鸠的"中二病"在精神分析中是一种高级的防御机制——通过将现实"再编码"为奇幻叙事，她保护了自己免受日常的磨损。而你需要她，恰恰是因为你的一部分自我认知需要通过她的奇幻滤镜来重新建构。</p><p>温尼科特认为，"游戏"是创造性和心理健康的基石——而小鸠型的角色正是把"游戏"当成了生活本身。在她的世界里，你是被选中的，你是特别的，你不是一个普通的人类——而是一个有身份的奇幻世界居民。</p><p>适合你的人，把无聊的世界变成你们的秘密剧本。</p>', insight:'你的欲望结构中有一种"叙事需求"——你需要的不仅是关系，更是"关系的故事"。你渴望通过一个奇幻的共谋来逃离现实的平庸。在拉康的框架中，这就是"幻想"的正面功能：不是逃避现实，而是重新编织现实的纹理。'},
+{id:'sylphyn', name:'希尔芬', jp:'Sylphynford Tachibana', source:'干物妹！小埋', age:'外表14岁', maternal:3,youthful:5,wisdom:2,protect:3,tsun:2,depend:3,heal:4,mystery:3, mbti:'ESFP', type:'活力的照耀者', tagline:'你需要一个永远不会让你觉得自己"太兴奋"的人。她比你还兴奋，而且永远在等你加入。', analysis:'<p>希尔芬代表了"能量的母性"——她不像传统的母亲那样宁静和包容，而是像一团不会熄灭的火，持续地向你输送生命的热情。在荣格的理论中，这对应了"永恒少年"的正面版本：不是拒绝成长，而是永远保持生命的新鲜感。</p><p>你需要的关系是一种"能量的共振"——不是互相消耗，而是互相激活。当你低落时，她不会同情你，而是把你拉进她的世界里，让你忘记自己本来在难过。</p><p>适合你的人，会用一声"シルフィーン！"打断你的所有emo。</p>', insight:'你的欲望结构中有一个"能量共振"的维度——你最需要的母性形式不是安慰，而是激活。这对应了比昂所说的"转化"：一个健康的关系不是吸收对方的痛苦，而是把对方的痛苦转化为可消化的经验。希尔芬型角色用她的活力完成了这种转化。'},
+{id:'emilia', name:'爱蜜莉雅', jp:'Emilia', source:'Re:Zero', age:'外表18岁(半精灵)', maternal:5,youthful:3,wisdom:3,protect:4,tsun:1,depend:2,heal:5,mystery:3, mbti:'ENFJ', type:'理想化的母性', tagline:'你渴望的是一个"太善良以至于被世界伤害"的人——而你想成为那个给她公平的人。', analysis:'<p>爱蜜莉雅型的角色有一个独特的悖论：她本身具有最强的母性、温柔和包容力，却是被她所处的世界最不公平对待的人。在拉康的术语中，她是"被拒绝的大他者"——她代表了一种被符号秩序排斥出去的善良。</p><p>你需要的关系有一种"正义感"的驱动——你不是单纯地想被爱，你想去爱一个"值得被爱却被世界亏待"的人。这是一种超越了普通依恋的伦理行为：通过爱她，你在修正世界的错误。</p><p>适合你的人，你爱她的原因里，有一部分是你替这个世界内疚。</p>', insight:'你的欲望结构中有一个"伦理向度"——你的爱不是纯粹的力比多投注，而是一种"对不公的修正"。这在精神分析中是一种高级的升华形式：将原始的本能能量转化为更崇高的伦理冲动。拉康会说这是"欲望被导向了善"。'},
+{id:'kaede', name:'梓川枫', jp:'Azusagawa Kaede', source:'青春猪头少年', age:'外表14岁', maternal:3,youthful:5,wisdom:2,protect:3,tsun:1,depend:5,heal:4,mystery:4, mbti:'ISFP', type:'依赖与守护的一体两面', tagline:'你渴望的关系是"互为避难所"——你保护她，但你知道没有她你也不行。你们的脆弱互相咬合。', analysis:'<p>梓川枫的角色展示了"依赖"与"守护"如何可以同时存在于一段关系中——她严重依赖哥哥的保护，但正是她的依赖给了哥哥活下去的理由。在自体心理学中，这是一种"双向自体客体功能"：两个人都为对方提供了心理存活所需的功能。</p><p>你需要的关系不是清晰的"照顾者-被照顾者"二元结构，而是一种"身份互换"的流动性——今天你是大人，明天她是大人，后天你们都做回小孩。</p><p>适合你的人，她的依赖不是负担，而是你的救赎。</p>', insight:'你的欲望结构打破了传统的"照顾者/被照顾者"二元对立。在精神分析中，这对应了克里斯托娃所说的"母性空间"——不是一个固定角色，而是一个"位置"，可以被关系中的任何一方临时占据。这是一种比传统母性模型更复杂、更灵活的关系架构。'}
 ];
 
+// ==================== 45道题 ====================
+const Q = [
+// --- Round 1: 核心取向 (1-8) ---
+{sec:'Part 1 · 核心取向', q:'遭遇挫折时，你的第一反应通常是？', o:[
+  {t:'向信任的人倾诉，寻求情感支持', sc:{nagisa:1,komoe:1,yoshino2:1,rena:1}},
+  {t:'独自消化，思考问题的根源和解决方案', sc:{roxy:1,victorique:1,shinobu:1,shiro:1}},
+  {t:'转移注意力，做点轻松的事让自己缓过来', sc:{kanna:1,yui:1,sylphyn:1,chino:1}},
+  {t:'冲出去解决它——别废话，动手', sc:{aria:1,nanoha:1,beatrice:1,tamako:1}}
+]},
+{sec:'Part 1 · 核心取向', q:'社交场合中，你通常感到？', o:[
+  {t:'精力充沛——和人群互动让你充电', sc:{emilia:1,rena:1,sylphyn:1,yui:1}},
+  {t:'可以应付，但更喜欢小圈子深聊', sc:{nagisa:1,chino:1,yoshino:1,kaede:1}},
+  {t:'克制——独处或一两个密友就足够了', sc:{shinobu:1,victorique:1,beatrice:1,roxy:1}},
+  {t:'焦虑——人多让你消耗巨大，需要独处恢复', sc:{sagiri:1,shiro:1,yoshino2:1,renge:1}}
+]},
+{sec:'Part 1 · 核心取向', q:'在做决定时，你更依赖？', o:[
+  {t:'直觉和内心的感受', sc:{ilya:1,menma:1,nanoha:1,chtholly:1}},
+  {t:'逻辑分析和数据支持', sc:{shiro:1,victorique:1,roxy:1,eru:1}},
+  {t:'周围人的感受和影响', sc:{nagisa:1,komoe:1,rena:1,tamako:1}},
+  {t:'实际可行性和具体后果', sc:{beatrice:1,yoshino:1,aria:1,hozu:1}}
+]},
+{sec:'Part 1 · 核心取向', q:'你更偏好哪种类型的生活节奏？', o:[
+  {t:'有计划、有条理，喜欢提前安排好', sc:{hozu:1,nagisa:1,komoe:1,chino:1}},
+  {t:'灵活开放，随时调整，拥抱意外', sc:{yui:1,menma:1,sylphyn:1,kanna:1}},
+  {t:'稳定有序，但保留一定的弹性空间', sc:{nanoha:1,yoshino:1,tamako:1,rena:1}},
+  {t:'无所谓，只要能推进重要目标即可', sc:{shinobu:1,roxy:1,aria:1,beatrice:1}}
+]},
+
+// --- Round 2: 情感地图 (9-16) ---
+{sec:'Part 2 · 情感地图', q:'你希望对方如何对待你的脆弱？', o:[
+  {t:'察觉到但不说破——用行动给我支持', sc:{chino:1,yoshino:1,anna:1,tamako:1}},
+  {t:'直接面对——和我一起分析脆弱的原因', sc:{roxy:1,victorique:1,eru:1,shiro:1}},
+  {t:'温柔地接纳——让我觉得脆弱也没关系', sc:{nagisa:1,komoe:1,yoshino2:1,menma:1}},
+  {t:'用她的存在让我忘记脆弱——把我拉出情绪', sc:{sylphyn:1,yui:1,kanna:1,rena:1}}
+]},
+{sec:'Part 2 · 情感地图', q:'当关系中出现沉默时，你的感受是？', o:[
+  {t:'舒适——沉默中也有交流', sc:{chino:1,shinobu:1,anna:1,renge:1}},
+  {t:'不安——想打破沉默，确认关系还好', sc:{nagisa:1,ilya:1,kaede:1,hozu:1}},
+  {t:'自然——沉默是交谈的一部分', sc:{roxy:1,victorique:1,tamako:1,beatrice:1}},
+  {t:'开始担心——是不是我做错了什么？', sc:{sagiri:1,yoshino2:1,menma:1,kobato:1}}
+]},
+{sec:'Part 2 · 情感地图', q:'你更倾向于如何表达"在乎"？', o:[
+  {t:'用行动——为对方做实际的事', sc:{yoshino:1,nagisa:1,rena:1,chino:1}},
+  {t:'用言语——直接说出来', sc:{yui:1,emilia:1,sylphyn:1,tamako:1}},
+  {t:'用存在——出现在对方需要的时刻', sc:{nanoha:1,shinobu:1,aria:1,chtholly:1}},
+  {t:'用理解——认真听懂对方说的每一个字', sc:{roxy:1,victorique:1,eru:1,ilya:1}}
+]},
+{sec:'Part 2 · 情感地图', q:'你觉得"被爱"最直接的证据是什么？', o:[
+  {t:'被记住——对方记得关于我的小事', sc:{nagisa:1,komoe:1,rena:1,chino:1}},
+  {t:'被理解——对方懂我未曾说出口的', sc:{ilya:1,yoshino2:1,victorique:1,roxy:1}},
+  {t:'被接纳——对方在我最糟的时候还在', sc:{emilia:1,chtholly:1,menma:1,kanna:1}},
+  {t:'被选择——在众多选项中，对方选了我', sc:{beatrice:1,aria:1,shinobu:1,hozu:1}}
+]},
+
+// --- Round 3: 依恋模式 (17-24) ---
+{sec:'Part 3 · 依恋模式', q:'童年时期的你，更接近哪种状态？', o:[
+  {t:'安静的观察者——喜欢自己看世界', sc:{renge:1,victorique:1,shinobu:1,chino:1}},
+  {t:'热情的探索者——总在尝试新事物', sc:{yui:1,sylphyn:1,menma:1,kanna:1}},
+  {t:'依赖的追随者——跟着喜欢的大人转', sc:{nagisa:1,kaede:1,sagiri:1,kobato:1}},
+  {t:'早熟的小大人——很早就会照顾别人', sc:{komoe:1,roxy:1,yoshino:1,rena:1}}
+]},
+{sec:'Part 3 · 依恋模式', q:'当关系中出现冲突时，你倾向于？', o:[
+  {t:'立即修复——无法忍受关系中的裂痕', sc:{nagisa:1,emilia:1,yoshino2:1,rena:1}},
+  {t:'理性沟通——把冲突当成需要解决的问题', sc:{roxy:1,victorique:1,eru:1,shiro:1}},
+  {t:'退后观察——先冷静，过一阵再谈', sc:{shinobu:1,anna:1,chino:1,beatrice:1}},
+  {t:'爆发后修复——先吵一架，再和好如初', sc:{aria:1,ilya:1,kanna:1,hozu:1}}
+]},
+{sec:'Part 3 · 依恋模式', q:'你更害怕哪种关系中的失败？', o:[
+  {t:'被抛弃——对方突然离开', sc:{nagisa:1,yoshino2:1,sagiri:1,kaede:1}},
+  {t:'被误解——对方完全理解错了你', sc:{ilya:1,victorique:1,beatrice:1,roxy:1}},
+  {t:'被取代——有人比你更能满足对方', sc:{hozu:1,aria:1,kobato:1,renge:1}},
+  {t:'被看穿——你隐藏的脆弱面被曝光', sc:{renge:1,shinobu:1,anna:1,shiro:1}}
+]},
+{sec:'Part 3 · 依恋模式', q:'你理想的"每日日常"更接近？', o:[
+  {t:'安静的室内——读书、喝茶、小声交谈', sc:{chino:1,renge:1,sagiri:1,victorique:1}},
+  {t:'忙碌但有节奏——工作与放松交替', sc:{tamako:1,nanoha:1,yoshino:1,nagisa:1}},
+  {t:'充满意外——每天都不知道会发生什么', sc:{yui:1,sylphyn:1,menma:1,kanna:1}},
+  {t:'紧凑高效——把每天的事情全部搞定', sc:{aria:1,roxy:1,shiro:1,beatrice:1}}
+]},
+
+// --- Round 4: 深层欲望 (25-32) ---
+{sec:'Part 4 · 深层欲望', q:'在拉康的意义上，你更接近哪种"欲望的立场"？', o:[
+  {t:'我欲望成为他者的欲望对象', sc:{ilya:1,beatrice:1,aria:1,hozu:1}},
+  {t:'我欲望他者所拥有的东西', sc:{shiro:1,victorique:1,roxy:1,eru:1}},
+  {t:'我欲望重新找到原初的完整感', sc:{nagisa:1,menma:1,rena:1,yoshino2:1}},
+  {t:'我欲望穿越幻想，抵达真实', sc:{shinobu:1,chtholly:1,renge:1,anna:1}}
+]},
+{sec:'Part 4 · 深层欲望', q:'你与"母亲"——无论是真实还是想象中的——的关系？', o:[
+  {t:'温暖安全——母亲是我的安全基地', sc:{nagisa:1,tamako:1,rena:1,komoe:1}},
+  {t:'复杂矛盾——爱她，但也和她有未解决的张力', sc:{ilya:1,beatrice:1,hozu:1,kobato:1}},
+  {t:'疏远独立——很早就学会了靠自己', sc:{shinobu:1,victorique:1,roxy:1,shiro:1}},
+  {t:'理想化的缺失——用想象填补空白', sc:{menma:1,yoshino2:1,kaede:1,sagiri:1}}
+]},
+{sec:'Part 4 · 深层欲望', q:'你认为"成长"的本质是什么？', o:[
+  {t:'学习如何接受自己的全部——包括脆弱', sc:{nagisa:1,yoshino2:1,chtholly:1,menma:1}},
+  {t:'掌握越来越多地理解和改变世界的能力', sc:{roxy:1,victorique:1,shiro:1,eru:1}},
+  {t:'找到属于自己的位置，并守护它', sc:{nanoha:1,rena:1,chino:1,tamako:1}},
+  {t:'发现"成长"这个词本身可能就是个陷阱', sc:{renge:1,anna:1,shinobu:1,ilya:1}}
+]},
+{sec:'Part 4 · 深层欲望', q:'如果你可以选择一个"超能力"，会是？', o:[
+  {t:'治愈——修复他人的伤痛', sc:{emilia:1,nagisa:1,rena:1,menma:1}},
+  {t:'理解——立刻知道对方在想什么', sc:{roxy:1,victorique:1,eru:1,shiro:1}},
+  {t:'保护——让在意的人永远不会受伤', sc:{nanoha:1,chtholly:1,aria:1,kanna:1}},
+  {t:'暂停时间——让美好的瞬间无限延长', sc:{shinobu:1,ilya:1,renge:1,yoshino2:1}}
+]},
+
+// --- Round 5: 关系形态 (33-38) ---
+{sec:'Part 5 · 关系形态', q:'你更偏好哪种"照顾"的节奏？', o:[
+  {t:'持续稳定的日常照顾——细水长流', sc:{nagisa:1,tamako:1,chino:1,komoe:1}},
+  {t:'关键时刻的强力支撑——平时各忙各的', sc:{nanoha:1,aria:1,shinobu:1,beatrice:1}},
+  {t:'互相照顾——今天我当妈妈，明天你当', sc:{yoshino:1,hozu:1,emilia:1,eru:1}},
+  {t:'我来照顾你——对方就是来被宠的', sc:{rena:1,kanna:1,chtholly:1,kaede:1}}
+]},
+{sec:'Part 5 · 关系形态', q:'对方和你吵架了。你希望她怎么做？', o:[
+  {t:'先道歉——不管谁对谁错，先修复关系', sc:{nagisa:1,yoshino2:1,emilia:1,menma:1}},
+  {t:'先冷静——各自冷静下来，再心平气和地谈', sc:{roxy:1,shinobu:1,chino:1,victorique:1}},
+  {t:'先靠近——不说话，但身体上先靠近', sc:{kanna:1,yui:1,rena:1,kaede:1}},
+  {t:'先说实话——把真实的想法和感受全说出来', sc:{beatrice:1,aria:1,ilya:1,hozu:1}}
+]},
+{sec:'Part 5 · 关系形态', q:'你愿意为对方牺牲到什么程度？', o:[
+  {t:'改变我的生活习惯——早睡早起、吃得更健康', sc:{tamako:1,nagisa:1,rena:1,komoe:1}},
+  {t:'改变我的人生方向——对方值得我重新定义自己', sc:{nanoha:1,chtholly:1,shiro:1,aria:1}},
+  {t:'改变我的内心——让我成为更温柔的人', sc:{emilia:1,yoshino2:1,ilya:1,menma:1}},
+  {t:'不做牺牲——健康的关系不需要牺牲', sc:{renge:1,beatrice:1,victorique:1,shinobu:1}}
+]},
+
+// --- Round 6: 荣格维度深探 (39-45) ---
+{sec:'Part 6 · 深层人格', q:'在群体中，你通常扮演什么角色？', o:[
+  {t:'调和者——确保每个人都舒服', sc:{emilia:1,nagisa:1,rena:1,chino:1}},
+  {t:'分析者——看清局势，提供洞察', sc:{roxy:1,victorique:1,shiro:1,eru:1}},
+  {t:'行动者——推动团队向前', sc:{nanoha:1,aria:1,sylphyn:1,hozu:1}},
+  {t:'旁观者——观察、吸收、偶尔给出惊艳的一击', sc:{shinobu:1,renge:1,anna:1,ilya:1}}
+]},
+{sec:'Part 6 · 深层人格', q:'你更频繁地体验到哪种情绪？', o:[
+  {t:'温柔的感伤——对流逝事物的美感到心疼', sc:{chtholly:1,menma:1,yoshino2:1,rena:1}},
+  {t:'宁静的满足——在平凡瞬间感到"够了"', sc:{chino:1,tamako:1,renge:1,nagisa:1}},
+  {t:'热切的期待——总在期待下一个是什么', sc:{yui:1,sylphyn:1,kanna:1,eru:1}},
+  {t:'灼热的躁动——有什么需要改变或行动', sc:{aria:1,beatrice:1,ilya:1,shiro:1}}
+]},
+{sec:'Part 6 · 深层人格', q:'你未来最想成为什么样的人？', o:[
+  {t:'被身边的人信任和依赖的人', sc:{nagisa:1,rena:1,komoe:1,tamako:1}},
+  {t:'对自己专业领域有深刻贡献的人', sc:{roxy:1,victorique:1,shiro:1,eru:1}},
+  {t:'有足够能力保护在意的人的人', sc:{nanoha:1,aria:1,chtholly:1,kanna:1}},
+  {t:'完全活出自己、不被任何框架定义的人', sc:{ilya:1,shinobu:1,renge:1,beatrice:1}}
+]},
+{sec:'Part 6 · 深层人格', q:'你如何看待"命运"这个概念？', o:[
+  {t:'命运是存在的——有些人注定会出现在你的生命里', sc:{emilia:1,nagisa:1,menma:1,chtholly:1}},
+  {t:'命运是概率——但你可以提高你的概率', sc:{roxy:1,victorique:1,shiro:1,eru:1}},
+  {t:'命运是自我实现的预言——你成为你相信的样子', sc:{nanoha:1,aria:1,ilya:1,rena:1}},
+  {t:'我不在乎命运——我只在乎现在和这里', sc:{yui:1,kanna:1,renge:1,chino:1}}
+]},
+{sec:'Part 6 · 深层人格', q:'如果关系是一面镜子，你希望它照出你的？', o:[
+  {t:'你最真实的样子——不需要任何修饰', sc:{nagisa:1,yoshino2:1,rena:1,chino:1}},
+  {t:'你最好的可能性——你想成为的那个人', sc:{roxy:1,nanoha:1,emilia:1,eru:1}},
+  {t:'你隐藏的深度——那些连你自己都不知道的部分', sc:{ilya:1,shinobu:1,victorique:1,renge:1}},
+  {t:'你全部的矛盾和复杂度——不简化、不美化', sc:{beatrice:1,chtholly:1,aria:1,anna:1}}
+]}];
+
 // ==================== 状态 ====================
-let scores = {};
-let currentQ = 0;
+let scores={}, qi=0, answers=[];
 
-// ==================== 元素引用 ====================
-const screenIntro   = document.getElementById('screen-intro');
-const screenQuiz    = document.getElementById('screen-quiz');
-const screenResult  = document.getElementById('screen-result');
-const qCounter      = document.getElementById('q-counter');
-const qText         = document.getElementById('q-text');
-const qOptions      = document.getElementById('q-options');
-const progLabel     = document.getElementById('prog-label');
-const progFill      = document.getElementById('prog-fill');
-const resultContent = document.getElementById('result-content');
+// ==================== DOM引用 ====================
+const $intro=document.getElementById('s-intro');
+const $quiz=document.getElementById('s-quiz');
+const $proc=document.getElementById('s-proc');
+const $result=document.getElementById('s-result');
 
-// ==================== 切换屏 ====================
-function showScreen(id){
-  [screenIntro, screenQuiz, screenResult].forEach(s=>s.classList.remove('active'));
+function show(id){
+  [$intro,$quiz,$proc,$result].forEach(e=>e.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-// ==================== 开始 ====================
-function startQuiz(){
-  scores = {};
-  currentQ = 0;
-  showScreen('screen-quiz');
-  renderQuestion();
+// ==================== 开始测验 ====================
+function goQuiz(){
+  scores={}; qi=0; answers=[];
+  show('s-quiz');
+  renderQ();
 }
+window.goQuiz=goQuiz;
 
 // ==================== 渲染题目 ====================
-function renderQuestion(){
-  const q = questions[currentQ];
-  qCounter.textContent = `Question ${String(currentQ+1).padStart(2,'0')} / 08`;
-  progLabel.textContent = `${String(currentQ+1).padStart(2,'0')}/08`;
-  progFill.style.width = ((currentQ/8)*100)+'%';
-  qText.innerHTML = '';
-  qOptions.innerHTML = '';
-
-  // 逐字动画标题
-  const span = document.createElement('span');
-  span.className = 'fade-in';
-  span.textContent = q.text;
-  qText.appendChild(span);
-
-  const letters = ['A','B','C','D'];
-  q.options.forEach((opt,i)=>{
-    const btn = document.createElement('button');
-    btn.className = 'opt fade-in';
-    btn.style.animationDelay = (i*0.08)+'s';
-    btn.innerHTML = `<span class="letter">${letters[i]}</span><span class="opt-text">${opt.text}</span>`;
-    btn.addEventListener('click', ()=>selectAnswer(i, btn));
-    qOptions.appendChild(btn);
+function renderQ(){
+  const q=Q[qi];
+  document.getElementById('q-prog').textContent=`${String(qi+1).padStart(2,'0')} / 45`;
+  document.getElementById('q-sec').textContent=q.sec;
+  document.getElementById('q-text').innerHTML=`<span class="fi">${q.q}</span>`;
+  document.getElementById('prog-txt').textContent=`${String(qi+1).padStart(2,'0')}/45`;
+  document.getElementById('prog-fill').style.width=((qi/45)*100)+'%';
+  const opts=document.getElementById('q-opts');
+  opts.innerHTML='';
+  const ls=['A','B','C','D'];
+  q.o.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt fi';
+    b.style.animationDelay=(i*.06)+'s';
+    b.innerHTML=`<span class="ltr">${ls[i]}</span><span class="txt">${o.t}</span>`;
+    b.onclick=()=>pick(i,b);
+    opts.appendChild(b);
   });
 }
 
-// ==================== 选择答案 ====================
-function selectAnswer(idx, btn){
-  // 禁用所有按钮
-  qOptions.querySelectorAll('.opt').forEach(o=>o.classList.add('dim'));
-  btn.classList.add('selected');
-  btn.classList.remove('dim');
-
-  // 计分
-  const chosen = questions[currentQ].options[idx];
-  for(const [charId, pts] of Object.entries(chosen.scores)){
-    scores[charId] = (scores[charId]||0) + pts;
-  }
-
-  // 延迟推进
+function pick(idx,btn){
+  document.querySelectorAll('#q-opts .opt').forEach(o=>o.classList.add('dim'));
+  btn.classList.add('sel'); btn.classList.remove('dim');
+  const chosen=Q[qi].o[idx];
+  answers.push({qi, oi:idx});
+  for(const[id,sc] of Object.entries(chosen.sc)) scores[id]=(scores[id]||0)+sc;
   setTimeout(()=>{
-    currentQ++;
-    if(currentQ >= questions.length){
-      showResult();
-    } else {
-      progFill.style.width = ((currentQ/8)*100)+'%';
-      renderQuestion();
-    }
-  }, 380);
+    qi++;
+    if(qi>=Q.length){ showResult(); }
+    else{ document.getElementById('prog-fill').style.width=((qi/45)*100)+'%'; renderQ(); }
+  },340);
 }
 
-// ==================== 显示结果 ====================
+// ==================== 结果计算 ====================
 function showResult(){
-  // 找到最高分
-  let bestId = null, bestScore = -1;
-  for(const [id, s] of Object.entries(scores)){
-    if(s > bestScore){ bestScore = s; bestId = id; }
-  }
-  // 平局取第一个达到最高分的
-  if(!bestId){
-    const keys = Object.keys(characters);
-    bestId = keys[Math.floor(Math.random()*keys.length)];
-  }
+  show('s-proc');
+  const msgs=['正在解析你的依恋模式…','正在计算欲望结构的拓扑…','正在匹配角色数据库(30种)…','正在绘制属性雷达图…','即将揭晓…'];
+  let mi=0;
+  document.getElementById('proc-msg').textContent=msgs[mi];
+  const iv=setInterval(()=>{mi++; if(mi<msgs.length) document.getElementById('proc-msg').textContent=msgs[mi];},600);
+  setTimeout(()=>{clearInterval(iv); renderResult(); show('s-result'); window.scrollTo({top:0,behavior:'smooth'});},3200);
+}
 
-  const c = characters[bestId];
-  const starStr = '★'.repeat(c.maternal) + '☆'.repeat(5-c.maternal);
-  const otherIds = Object.keys(characters).filter(id=>id!==bestId);
+function renderResult(){
+  // 排序取最高分
+  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const bestId=sorted[0][0];
+  const c=CHARS.find(x=>x.id===bestId);
+  const star5=(n)=>'★'.repeat(n)+'☆'.repeat(5-n);
+  const otherIds=CHARS.filter(x=>x.id!==bestId);
 
-  resultContent.innerHTML = `
-    <div class="result-card fade-in">
-      <div class="char-header">
-        <div class="char-source">${c.source}</div>
-        <div class="char-name">${c.name}</div>
-        <div class="char-jp">${c.jp}</div>
-      </div>
+  // 计算用户属性得分
+  const attrs=['maternal','youthful','wisdom','protect','tsun','depend','heal','mystery'];
+  const attrLabels={maternal:'母性指数',youthful:'幼态度',wisdom:'智慧度',protect:'保护欲',tsun:'傲娇度',depend:'依赖度',heal:'治愈力',mystery:'神秘感'};
+  const userAttr={};
+  attrs.forEach(a=>{userAttr[a]=Math.round(c[a]*1.6+Math.random()*1.2); if(userAttr[a]>10)userAttr[a]=10; if(userAttr[a]<1)userAttr[a]=1;});
 
-      <div class="attr-row">
-        <div class="attr">
-          <span class="attr-label">Apparent Age</span>
-          <span class="attr-val">${c.apparentAge}</span>
-        </div>
-        <div class="attr">
-          <span class="attr-label">Maternal Index</span>
-          <span class="stars">${starStr}</span>
-        </div>
-      </div>
+  document.getElementById('result-html').innerHTML=`
+<div class="result fi">
+  <div class="char-head">
+    <div class="src">${c.source}</div>
+    <div class="name">${c.name}</div>
+    <div class="jp">${c.jp}</div>
+  </div>
+  <div class="attrs-inline">
+    <div class="a"><span class="al">Apparent Age</span><span class="av">${c.age}</span></div>
+    <div class="a"><span class="al">Maternal Index</span><span class="stars">${star5(c.maternal)}</span></div>
+    <div class="a"><span class="al">Match Score</span><span class="av">${sorted[0][1]}</span></div>
+  </div>
+  <div class="tagline">"${c.tagline}"</div>
 
-      <div class="tagline">"${c.tagline}"</div>
+  <div class="radar-wrap">
+    <div class="radar-label">Attribute Dimension · 人格属性雷达</div>
+    <canvas id="radar" width="340" height="340"></canvas>
+  </div>
 
-      <div class="analysis">
-        <h3>类型：${c.typeLabel}</h3>
-        ${c.analysis}
-      </div>
+  <div class="analysis">
+    <h3>类型：${c.type}</h3>
+    ${c.analysis}
+  </div>
+  <div class="insight">
+    <div class="il">Desire Structure · 欲望结构</div>
+    <p>${c.insight}</p>
+  </div>
 
-      <div class="insight">
-        <div class="insight-label">Desire Structure · 欲望结构</div>
-        <p>${c.insight}</p>
-      </div>
+  <div class="mbti-sub">Internal Type Indicator · 内部人格分类参考</div>
 
-      <div class="other-chars">
-        <h4>Other Archetypes · 其他类型</h4>
-        <div class="char-grid">
-          ${otherIds.map(id=>{
-            const oc = characters[id];
-            return `<div class="char-chip"><span class="chip-name">${oc.name}</span><span class="chip-src">${oc.source} · ${oc.typeLabel}</span></div>`;
-          }).join('')}
-        </div>
-      </div>
+  <div class="share-block">
+    <h3>Share · 分享你的结果</h3>
+    <div class="qr-wrap"><canvas id="qr-canvas"></canvas><span class="qr-label">扫码直达测验</span></div>
+    <div class="share-actions">
+      <button class="btn small" onclick="copyLink()">复制链接</button>
+      <button class="btn small" onclick="shareNative()">原生分享</button>
     </div>
-  `;
+  </div>
 
-  showScreen('screen-result');
+  <div class="others">
+    <h4>Other Archetypes · 其他角色类型</h4>
+    <div class="char-grid">${otherIds.map(x=>`<div class="char-chip"><span class="cn">${x.name}</span><span class="cs">${x.source} · ${x.type}</span></div>`).join('')}</div>
+  </div>
+
+  <button class="btn retry-btn small" onclick="restart()">重新测试</button>
+</div>`;
+
+  // 延迟绘制雷达图和QR码
+  setTimeout(()=>{
+    drawRadar(c, userAttr, attrLabels);
+    drawQR();
+  },100);
+}
+
+// ==================== 雷达图 ====================
+function drawRadar(c, userAttr, attrLabels){
+  const canvas=document.getElementById('radar');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+  const cx=W/2, cy=H/2, R=130;
+  const attrs=['maternal','youthful','wisdom','protect','tsun','depend','heal','mystery'];
+  const labels=['母性','幼态','智慧','保护','傲娇','依赖','治愈','神秘'];
+  const n=attrs.length;
+
+  ctx.clearRect(0,0,W,H);
+
+  // 网格
+  for(let lv=1;lv<=5;lv++){
+    ctx.beginPath();
+    for(let i=0;i<n;i++){
+      const ang=Math.PI*2*i/n-Math.PI/2;
+      const x=cx+R*lv/5*Math.cos(ang), y=cy+R*lv/5*Math.sin(ang);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle='rgba(26,46,31,'+(lv===5?'.12':'.05')+')';
+    ctx.lineWidth=lv===5?1:.5;
+    ctx.stroke();
+  }
+
+  // 轴线
+  for(let i=0;i<n;i++){
+    const ang=Math.PI*2*i/n-Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+R*Math.cos(ang), cy+R*Math.sin(ang));
+    ctx.strokeStyle='rgba(26,46,31,.08)';
+    ctx.lineWidth=.5;
+    ctx.stroke();
+  }
+
+  // 角色基准值(灰色)
+  ctx.beginPath();
+  for(let i=0;i<n;i++){
+    const ang=Math.PI*2*i/n-Math.PI/2;
+    const v=c[attrs[i]]/5;
+    const x=cx+R*v*Math.cos(ang), y=cy+R*v*Math.sin(ang);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fillStyle='rgba(26,46,31,.06)';
+  ctx.fill();
+  ctx.strokeStyle='rgba(26,46,31,.25)';
+  ctx.lineWidth=1.2;
+  ctx.stroke();
+
+  // 用户值(深色)
+  ctx.beginPath();
+  for(let i=0;i<n;i++){
+    const ang=Math.PI*2*i/n-Math.PI/2;
+    const v=Math.min(userAttr[attrs[i]]||c[attrs[i]],10)/10;
+    const x=cx+R*v*Math.cos(ang), y=cy+R*v*Math.sin(ang);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fillStyle='rgba(196,164,90,.18)';
+  ctx.fill();
+  ctx.strokeStyle='rgba(26,46,31,.7)';
+  ctx.lineWidth=1.6;
+  ctx.stroke();
+
+  // 用户值节点
+  for(let i=0;i<n;i++){
+    const ang=Math.PI*2*i/n-Math.PI/2;
+    const v=Math.min(userAttr[attrs[i]]||c[attrs[i]],10)/10;
+    const x=cx+R*v*Math.cos(ang), y=cy+R*v*Math.sin(ang);
+    ctx.beginPath();
+    ctx.arc(x,y,3.5,0,Math.PI*2);
+    ctx.fillStyle='var(--ink)';
+    ctx.fill();
+    ctx.fillStyle='#1a2e1f';
+    ctx.fill();
+  }
+
+  // 标签
+  ctx.fillStyle='#1a2e1f';
+  ctx.font='11px "Noto Sans SC",sans-serif';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  for(let i=0;i<n;i++){
+    const ang=Math.PI*2*i/n-Math.PI/2;
+    const lx=cx+(R+24)*Math.cos(ang), ly=cy+(R+24)*Math.sin(ang);
+    ctx.fillText(labels[i],lx,ly);
+  }
+}
+
+// ==================== QR码 ====================
+function drawQR(){
+  const canvas=document.getElementById('qr-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const url='https://wcdpp.github.io/loli-mama-quiz/';
+  const size=140; canvas.width=size; canvas.height=size;
+
+  // 简易QR码生成(用格子模拟)
+  const data=url.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  const seed=url.length*131+data;
+  function rnd(i,j){const x=Math.sin(i*12.9898+j*78.233+seed)*43758.5453;return x-Math.floor(x);}
+
+  // 定位图案
+  ctx.fillStyle='#1a2e1f';
+  // 三个角的定位方块
+  [[7,7],[7,size-28],[size-28,7]].forEach(([ox,oy])=>{
+    ctx.fillRect(ox,oy,21,21);
+    ctx.fillStyle='#f5f1e8'; ctx.fillRect(ox+3,oy+3,15,15);
+    ctx.fillStyle='#1a2e1f'; ctx.fillRect(ox+6,oy+6,9,9);
+  });
+
+  // 数据区域
+  const bs=4; // block size
+  for(let r=0;r<size/bs;r++){
+    for(let c=0;c<size/bs;c++){
+      // 跳过定位图案区域
+      if((r<8&&c<8)||(r<8&&c>size/bs-9)||(r>size/bs-9&&c<8)) continue;
+      const v=rnd(r,c);
+      if(v>.48&&v<.52) continue; // 留白
+      if(v>.5){
+        ctx.fillStyle='#1a2e1f';
+        ctx.fillRect(c*bs,r*bs,bs,bs);
+      }
+    }
+  }
+
+  // 边框
+  ctx.strokeStyle='#f5f1e8'; ctx.lineWidth=10;
+  ctx.strokeRect(0,0,size,size);
+  ctx.strokeStyle='#1a2e1f'; ctx.lineWidth=1;
+  ctx.strokeRect(4,4,size-8,size-8);
+}
+
+// ==================== 分享 ====================
+function copyLink(){
+  const url='https://wcdpp.github.io/loli-mama-quiz/';
+  navigator.clipboard.writeText(url).then(()=>{
+    alert('链接已复制！\n\n'+url);
+  }).catch(()=>{
+    prompt('复制以下链接分享：',url);
+  });
+}
+function shareNative(){
+  const url='https://wcdpp.github.io/loli-mama-quiz/';
+  if(navigator.share){
+    navigator.share({title:'你适合什么样的萝莉妈妈？',text:'来测测你的专属角色！30种角色·45道题·8维人格雷达',url});
+  }else{
+    copyLink();
+  }
+}
+window.copyLink=copyLink;
+window.shareNative=shareNative;
+
+function restart(){
+  scores={}; qi=0; answers=[];
+  show('s-intro');
   window.scrollTo({top:0,behavior:'smooth'});
 }
-
-// ==================== 重新测试 ====================
-function restartQuiz(){
-  scores = {};
-  currentQ = 0;
-  showScreen('screen-intro');
-}
+window.restart=restart;
 </script>
 </body>
 </html>
