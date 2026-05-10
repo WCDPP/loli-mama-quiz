@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你适合什么样的萝莉妈妈？ · Loli-Mama Personality Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a2e1f; --ink-rgb:26,46,31;
+  --paper:#f5f1e8; --paper-rgb:245,241,232;
+  --paper-tint:#ece7da; --ink-tint:#253d2c;
+  --mono:"IBM Plex Mono",monospace;
+  --serif:"Noto Serif SC",serif;
+  --sans:"Noto Sans SC",sans-serif;
+  --accent:#c4a45a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;min-height:100vh;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{display:flex;flex-direction:column;align-items:center}
+
+/* ========== 容器 ========== */
+.app{width:100%;max-width:680px;padding:8vh 6vw 6vh;display:flex;flex-direction:column;min-height:100vh}
+
+/* ========== 顶栏 chrome ========== */
+.top-bar{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:8vh}
+.top-bar .sep{opacity:.3}
+
+/* ========== 屏控制 ========== */
+.screen{display:none;flex:1;flex-direction:column}
+.screen.active{display:flex}
+
+/* ========== 标题 ========== */
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(2rem,5.5vw,3.2rem);line-height:1.1;letter-spacing:-.01em;margin-bottom:2vh}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(1.4rem,3.2vw,2rem);line-height:1.2;margin-bottom:1.6vh}
+.sub{font-family:var(--serif);font-weight:400;font-size:clamp(.95rem,1.5vw,1.2rem);line-height:1.6;opacity:.72;margin-bottom:3vh}
+
+/* ========== 开始按钮 ========== */
+.btn{display:inline-flex;align-items:center;gap:.6em;padding:1.8vh 3.2vw;font-family:var(--mono);font-size:13px;letter-spacing:.24em;text-transform:uppercase;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:all .25s ease;border-radius:2px}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn.primary{background:var(--ink);color:var(--paper);padding:2vh 4vw;font-size:14px}
+.btn.primary:hover{background:var(--ink-tint)}
+.btn.small{font-size:11px;padding:1.2vh 2vw}
+
+/* ========== 底部元信息 ========== */
+.meta-foot{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;opacity:.4;margin-top:auto;padding-top:4vh}
+
+/* ========== 答题屏 ========== */
+.q-counter{font-family:var(--mono);font-size:12px;letter-spacing:.24em;opacity:.5;margin-bottom:3vh}
+.q-text{font-family:var(--serif);font-weight:600;font-size:clamp(1.3rem,2.6vw,1.8rem);line-height:1.45;margin-bottom:5vh}
+.options{display:flex;flex-direction:column;gap:2vh}
+.opt{display:flex;align-items:flex-start;gap:2vw;padding:2.4vh 2.4vw;border:1px solid rgba(var(--ink-rgb),.15);border-radius:3px;cursor:pointer;transition:all .22s ease;background:transparent;text-align:left;font-family:var(--sans);font-size:clamp(.9rem,1.3vw,1.1rem);line-height:1.55;color:var(--ink);width:100%}
+.opt:hover{border-color:var(--ink);background:rgba(var(--ink-rgb),.03)}
+.opt:active{transform:scale(.99)}
+.opt .letter{font-family:var(--serif);font-weight:700;font-size:1.4em;opacity:.35;min-width:1.2em;line-height:1}
+.opt .opt-text{flex:1}
+.opt.selected{border-color:var(--ink);background:rgba(var(--ink-rgb),.06)}
+.opt.dim{opacity:.3;pointer-events:none}
+
+/* ========== 进度条 ========== */
+.progress-wrap{display:flex;align-items:center;gap:1.6vw;margin-top:6vh;font-family:var(--mono);font-size:10px;letter-spacing:.2em;opacity:.45}
+.progress-bar{flex:1;height:2px;background:rgba(var(--ink-rgb),.1);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--ink);transition:width .45s ease;border-radius:2px}
+
+/* ========== 过渡动画 ========== */
+.fade-in{animation:fadeIn .5s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ========== 结果屏 ========== */
+.result-card{display:flex;flex-direction:column;gap:3vh}
+.char-header{display:flex;flex-direction:column;gap:1vh}
+.char-name{font-family:var(--serif);font-weight:900;font-size:clamp(2rem,5.5vw,3.2rem);line-height:1.1}
+.char-jp{font-family:var(--serif);font-weight:400;font-size:clamp(1rem,2vw,1.3rem);opacity:.5;margin-bottom:.5vh}
+.char-source{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.45}
+
+.attr-row{display:flex;gap:4vw;flex-wrap:wrap;margin:2vh 0}
+.attr{display:flex;flex-direction:column;gap:.4vh}
+.attr .attr-label{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.4}
+.attr .attr-val{font-family:var(--serif);font-weight:600;font-size:1.1rem}
+.attr .stars{color:var(--accent);font-size:1.1rem;letter-spacing:.1em}
+
+.tagline{font-family:var(--serif);font-weight:500;font-size:clamp(1.1rem,2vw,1.4rem);line-height:1.45;opacity:.8;padding:2vh 0;border-top:1px solid rgba(var(--ink-rgb),.1);border-bottom:1px solid rgba(var(--ink-rgb),.1)}
+
+.analysis{}
+.analysis h3{font-family:var(--serif);font-weight:700;font-size:1.2rem;margin-bottom:1.2vh}
+.analysis p{font-family:var(--sans);font-weight:400;font-size:clamp(.88rem,1.1vw,1rem);line-height:1.8;opacity:.78;margin-bottom:2vh}
+
+.insight{background:rgba(var(--ink-rgb),.04);padding:2.4vh 2.4vw;border-left:2px solid var(--ink);margin:2vh 0}
+.insight .insight-label{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;opacity:.45;margin-bottom:1vh}
+.insight p{font-family:var(--serif);font-weight:400;font-size:clamp(.9rem,1.2vw,1rem);line-height:1.65;opacity:.82}
+
+/* ========== 其他角色预览 ========== */
+.other-chars{margin-top:4vh}
+.other-chars h4{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;opacity:.45;margin-bottom:2vh}
+.char-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6vw}
+@media(max-width:500px){.char-grid{grid-template-columns:repeat(2,1fr)}}
+.char-chip{display:flex;flex-direction:column;gap:.6vh;padding:1.6vh 1.6vw;border:1px solid rgba(var(--ink-rgb),.1);border-radius:3px;cursor:default;opacity:.5;font-size:.85rem}
+.char-chip .chip-name{font-family:var(--serif);font-weight:600;font-size:.95rem}
+.char-chip .chip-src{font-family:var(--mono);font-size:9px;letter-spacing:.12em;opacity:.5}
+
+.retry{margin-top:5vh;align-self:flex-start}
+
+@media(max-width:500px){
+  .app{padding:4vh 5vw 4vh}
+  .top-bar{margin-bottom:4vh}
+  .q-text{margin-bottom:3vh}
+  .options{gap:1.4vh}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ========== 顶栏 ========== -->
+  <div class="top-bar">
+    <span>Loli-Mama Quiz</span>
+    <span class="sep">·</span>
+    <span>人格分类</span>
+  </div>
+
+  <!-- =============================================================
+       屏1 · 开场
+  ============================================================= -->
+  <div class="screen active" id="screen-intro">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+      <h1 class="fade-in">你适合什么样的<br>萝莉妈妈？</h1>
+      <p class="sub fade-in" style="animation-delay:.12s">
+        基于拉康精神分析与弗洛伊德人格理论<br>
+        从 6 部动画/轻小说中匹配你的专属角色
+      </p>
+      <p class="fade-in" style="animation-delay:.2s;font-family:var(--serif);font-weight:400;font-size:clamp(.9rem,1.3vw,1.1rem);line-height:1.7;opacity:.7;max-width:42ch;margin-bottom:5vh">
+        "萝莉妈妈"不只是一个角色类型——<br>
+        它是一种欲望结构的文化映射。<br>
+        通过 8 道题，看清你无意识中<br>
+        真正渴望的"母性"形态。
+      </p>
+      <button class="btn primary fade-in" style="animation-delay:.3s" onclick="startQuiz()">
+        开始测试
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="meta-foot">收录 6 部作品角色 · 8 道题 · 约 3 分钟</div>
+  </div>
+
+  <!-- =============================================================
+       屏2 · 答题
+  ============================================================= -->
+  <div class="screen" id="screen-quiz">
+    <div class="q-counter" id="q-counter">Question 01 / 08</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="q-options"></div>
+    <div class="progress-wrap">
+      <span id="prog-label">01/08</span>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- =============================================================
+       屏3 · 结果
+  ============================================================= -->
+  <div class="screen" id="screen-result">
+    <div id="result-content"></div>
+    <button class="btn retry small" onclick="restartQuiz()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+      重新测试
+    </button>
+  </div>
+
+</div>
+
+<script>
+// ==================== 角色数据库 ====================
+const characters = {
+  nagisa: {
+    id:'nagisa',
+    name:'古河渚',
+    jp:'Furukawa Nagisa',
+    source:'CLANNAD',
+    apparentAge:'17 岁',
+    maternal:5,
+    typeLabel:'温柔的陪伴者',
+    tagline:'你需要的不是解决问题的那个人，而是无论问题是否解决，都会一直在的那个人。',
+    analysis:`<p>你对"母性"的想象，沿袭了弗洛伊德所说的"前俄狄浦斯阶段"对母亲的原始依恋——在那个世界里，没有冲突，没有对抗，只有无条件的接纳。</p>
+<p>古河渚型的萝莉妈妈，恰好提供了这种"回到子宫"般的欲望对象。她不催促你成长，不要求你成功，她的存在本身就是一种治愈。这正是拉康所描述的"对象 a"——你永远在追寻那个"完美的原初温暖"。</p>
+<p><strong>适合你的人</strong>，会是一个用最朴素的方式给予你最深层情感安全感的存在。</p>`,
+    insight:'你的欲望结构核心是"回归"——回归到一个没有评判、没有要求的原初关系。这不是退行，而是对晚期资本主义"绩效社会"的深层抵抗。在一个人人都在要求你"更好"的世界里，你选择"被温柔地接受"。'
+  },
+  beatrice: {
+    id:'beatrice',
+    name:'碧翠丝',
+    jp:'Beatrice',
+    source:'Re:Zero',
+    apparentAge:'外表 11 岁',
+    maternal:4,
+    typeLabel:'傲娇的守护者',
+    tagline:'你和她一样，用坚硬的外壳包裹柔软的内心。你们之间的爱，从来不用嘴说。',
+    analysis:`<p>在拉康的镜像阶段理论中，主体通过对镜中形象的认同来构建自我。而碧翠丝型的"嘴硬心软"，恰好是你自我认同中"理想自我"与"真实自我"之间张力的投影——你表面上拒绝依赖，内心深处却极度渴望被守护。</p>
+<p>这是一种典型的"反向形成"防御机制：越渴望越推开，越在乎越冷漠。碧翠丝用她的傲娇教会你一件事：<span class="hi">真正的亲密不需要言说。</span></p>
+<p><strong>适合你的关系</strong>，是那种彼此都不用解释，却在关键时刻绝不缺席的默契。</p>`,
+    insight:'你的防御机制是"反向形成"——用推开的方式来测试对方是否值得信赖。这与弗洛伊德描述的肛门期固着有关：在关系中，你需要"控制距离"来获得安全感。一旦对方通过了测试，你会是全世界最忠诚的人。'
+  },
+  roxy: {
+    id:'roxy',
+    name:'洛琪希',
+    jp:'Roxy Migurdia',
+    source:'无职转生',
+    apparentAge:'外表幼态（魔人族）',
+    maternal:4,
+    typeLabel:'智慧的导师',
+    tagline:'你渴望的不是被保护，而是被引导。最好的爱，是帮你成为更好的自己。',
+    analysis:`<p>弗洛伊德在《文明及其不满》中指出，人类的一部分焦虑来源于对自身局限性的认知。而你，恰好是一个清醒到足以看见自己局限性的人——这让你比他人更需要一个"导师"。</p>
+<p>洛琪希型的萝莉妈妈，在拉康的框架中扮演的是"大他者"的温和版本：她不惩罚你的不足，而是用知识和耐心帮你填补那些不足。你的欲望对象不是"母性的怀抱"，而是<span class="hi">"母性的指引"</span>。</p>
+<p><strong>适合你的人</strong>，会在你迷路时递给你一张地图——而不是替你走路。</p>`,
+    insight:'你的俄狄浦斯路径不是对抗父之法，而是内化它。你认同"规则"本身的价值，但需要一个温和的引路人帮你进入符号秩序。这在拉康看来是一种"成熟的神经症结构"——你接受阉割，但需要温柔的引导。'
+  },
+  komoe: {
+    id:'komoe',
+    name:'月咏小萌',
+    jp:'Tsukuyomi Komoe',
+    source:'魔法禁书目录',
+    apparentAge:'外表小学生 / 实际成年',
+    maternal:5,
+    typeLabel:'永远的照顾者',
+    tagline:'你需要一个真正成熟的人，只是恰好她长得很可爱。反差不是萌点，是安心感。',
+    analysis:`<p>温尼科特提出了"足够好的母亲"（good enough mother）的概念——她不需要完美，只需要"刚好够好"。而月咏小萌型的角色，恰恰是这种"足够好"的极致化身：她有成年人的责任感与照顾能力，却以最不易构成威胁的形态出现。</p>
+<p>在拉康的术语中，<span class="hi">你渴望的是一个"不携带菲勒斯威胁的母性大他者"</span>——一个能照顾你、但不会评判你或控制你的人。这种极度反差本身就构成了一种安全的欲望空间。</p>
+<p><strong>适合你的人</strong>，会让你在不知不觉中放下所有防备。</p>`,
+    insight:'你对"成熟"的定义超越了外表。你本能地区分了"社会年龄"和"情感功能"——你需要的是后者的稳定输出，而外观的不匹配恰恰降低了你的防御机制。这是一种高度理性的依恋策略。'
+  },
+  ilya: {
+    id:'ilya',
+    name:'伊莉雅斯菲尔',
+    jp:'Illyasviel von Einzbern',
+    source:'Fate/stay night',
+    apparentAge:'外表 10-12 岁',
+    maternal:3,
+    typeLabel:'复杂的双重灵魂',
+    tagline:'你自己就是一个矛盾体：时而想被宠，时而想宠人。你需要一个同样复杂的灵魂。',
+    analysis:`<p>克莱因在客体关系理论中提出了"偏执-分裂心位"与"抑郁心位"的交替——而你的情感模式恰好在这两极之间摇摆。你可以一瞬间从"被照顾的孩子"切换到"照顾人的大人"，这让传统的单一角色无法满足你。</p>
+<p>伊莉雅型的萝莉妈妈，本身就是这种二重性的极致体现：她既是天真的，又是深邃的；既是需要被爱的，又是主动去爱的。在拉康的框架中，这恰好对应了<span class="hi">"欲望的主体与欲望的对象之间的辩证法"</span>——你同时在两个位置上。</p>
+<p><strong>适合你的人</strong>，必须能接受你在"需要被照顾"和"想要照顾人"之间自由切换。</p>`,
+    insight:'你的欲望结构最复杂——它同时指向"成为它"和"拥有它"两种方向。这在精神分析中是一种双性化的欲望配置，不是缺陷，而是更丰富的可能。你需要的不是一个单一功能的母性，而是一个能与你对位变奏的灵魂。'
+  },
+  nanoha: {
+    id:'nanoha',
+    name:'高町奈叶',
+    jp:'Takamachi Nanoha',
+    source:'魔法少女奈叶',
+    apparentAge:'9 → 23 岁（跨时间线）',
+    maternal:4,
+    typeLabel:'成长的同行者',
+    tagline:'你相信关系和人是会成长的。你要的不是固定的角色，而是并肩同行的旅程。',
+    analysis:`<p>在埃里克森的发展阶段理论中，每个阶段都有其核心任务。而你的人格结构表明，你已经超越了"依赖 vs 独立"的二元对立，进入了一个更健康的阶段——你寻求的是"共同成长"。</p>
+<p>高町奈叶型的角色独特性在于，她自身的叙事弧就是"从被保护者到保护者"的完整成长线。从拉康的角度看，<span class="hi">你不是在寻找一个"固定的母性大他者"，而是在寻找一个"与你一起穿越幻想"的旅伴</span>——你们共同构建主体性，而非一方供养另一方。</p>
+<p><strong>适合你的人</strong>，不是你的起点也不是你的终点，而是和你一起走完全程的人。</p>`,
+    insight:'你可能是 6 种类型中最"健康"的一种。你不寻求退行性的母性怀抱，也不试图通过控制关系来获得安全感。你的欲望结构指向"生成"（becoming）而不是"回归"（returning）。这是德勒兹式的欲望——欲望作为生产力，而非缺失。'
+  }
+};
+
+// ==================== 题目 ====================
+const questions = [
+  { // Q1: 依恋风格
+    text:'心情低落时，你更希望对方怎么做？',
+    options:[
+      {text:'安静地陪在身边，什么都不说', scores:{nagisa:1}},
+      {text:'给我具体建议和方向', scores:{roxy:1, nanoha:1}},
+      {text:'用有趣的事转移我的注意力', scores:{beatrice:1}},
+      {text:'抱着我，让我尽情发泄', scores:{komoe:1, ilya:1}},
+    ]
+  },
+  { // Q2: 欲望对象
+    text:'你理想中的"被爱"方式更接近？',
+    options:[
+      {text:'被无条件地包容和接纳', scores:{nagisa:1, komoe:1}},
+      {text:'被引导着走向更好的自己', scores:{roxy:1}},
+      {text:'被热烈地需要和依赖', scores:{ilya:1, beatrice:1}},
+      {text:'被默默守护，从不打扰', scores:{nanoha:1, nagisa:1}},
+    ]
+  },
+  { // Q3: 权威关系
+    text:'面对人生重要抉择，你的倾向是？',
+    options:[
+      {text:'听从内心感受', scores:{ilya:1, nagisa:1}},
+      {text:'理性分析利弊', scores:{roxy:1, nanoha:1}},
+      {text:'征求信任的人的意见', scores:{komoe:1}},
+      {text:'走一步看一步，不急决定', scores:{beatrice:1, ilya:1}},
+    ]
+  },
+  { // Q4: 防御机制
+    text:'在亲密关系中，你最害怕什么？',
+    options:[
+      {text:'被抛弃', scores:{nagisa:1, komoe:1}},
+      {text:'失去自我', scores:{nanoha:1, beatrice:1}},
+      {text:'被误解', scores:{ilya:1, roxy:1}},
+      {text:'被控制', scores:{beatrice:1, nanoha:1}},
+    ]
+  },
+  { // Q5: 情感需求
+    text:'你更渴望从对方那里获得什么？',
+    options:[
+      {text:'温暖和安全感', scores:{nagisa:1, komoe:1}},
+      {text:'智慧和指引', scores:{roxy:1}},
+      {text:'刺激和新鲜感', scores:{beatrice:1, ilya:1}},
+      {text:'理解和认同', scores:{ilya:1, nanoha:1}},
+    ]
+  },
+  { // Q6: 镜像阶段
+    text:'你如何看待自己与理想自我的差距？',
+    options:[
+      {text:'差距很大，经常感到焦虑', scores:{komoe:1, nagisa:1}},
+      {text:'有差距，但我正在努力缩短', scores:{nanoha:1, roxy:1}},
+      {text:'我就是我，不那么在意差距', scores:{beatrice:1}},
+      {text:'"理想自我"本身是个幻觉', scores:{ilya:1, roxy:1}},
+    ]
+  },
+  { // Q7: 对象a
+    text:'哪件事最能让你感到"被爱着"？',
+    options:[
+      {text:'对方记得我说过的小事', scores:{komoe:1, nagisa:1}},
+      {text:'对方做了实际帮助我的事', scores:{nanoha:1, roxy:1}},
+      {text:'对方愿意为我改变自己的计划', scores:{ilya:1, beatrice:1}},
+      {text:'对方相信并肯定我的能力', scores:{roxy:1, nanoha:1}},
+    ]
+  },
+  { // Q8: 俄狄浦斯向度
+    text:'你与"规则/权威"的关系更接近？',
+    options:[
+      {text:'尊重规则，但保持距离', scores:{nanoha:1, komoe:1}},
+      {text:'质疑规则，想自己验证', scores:{roxy:1, ilya:1}},
+      {text:'表面遵守，内心叛逆', scores:{beatrice:1, ilya:1}},
+      {text:'规则给人安全感，我愿意遵循', scores:{komoe:1, nagisa:1}},
+    ]
+  },
+];
+
+// ==================== 状态 ====================
+let scores = {};
+let currentQ = 0;
+
+// ==================== 元素引用 ====================
+const screenIntro   = document.getElementById('screen-intro');
+const screenQuiz    = document.getElementById('screen-quiz');
+const screenResult  = document.getElementById('screen-result');
+const qCounter      = document.getElementById('q-counter');
+const qText         = document.getElementById('q-text');
+const qOptions      = document.getElementById('q-options');
+const progLabel     = document.getElementById('prog-label');
+const progFill      = document.getElementById('prog-fill');
+const resultContent = document.getElementById('result-content');
+
+// ==================== 切换屏 ====================
+function showScreen(id){
+  [screenIntro, screenQuiz, screenResult].forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ==================== 开始 ====================
+function startQuiz(){
+  scores = {};
+  currentQ = 0;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+// ==================== 渲染题目 ====================
+function renderQuestion(){
+  const q = questions[currentQ];
+  qCounter.textContent = `Question ${String(currentQ+1).padStart(2,'0')} / 08`;
+  progLabel.textContent = `${String(currentQ+1).padStart(2,'0')}/08`;
+  progFill.style.width = ((currentQ/8)*100)+'%';
+  qText.innerHTML = '';
+  qOptions.innerHTML = '';
+
+  // 逐字动画标题
+  const span = document.createElement('span');
+  span.className = 'fade-in';
+  span.textContent = q.text;
+  qText.appendChild(span);
+
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt fade-in';
+    btn.style.animationDelay = (i*0.08)+'s';
+    btn.innerHTML = `<span class="letter">${letters[i]}</span><span class="opt-text">${opt.text}</span>`;
+    btn.addEventListener('click', ()=>selectAnswer(i, btn));
+    qOptions.appendChild(btn);
+  });
+}
+
+// ==================== 选择答案 ====================
+function selectAnswer(idx, btn){
+  // 禁用所有按钮
+  qOptions.querySelectorAll('.opt').forEach(o=>o.classList.add('dim'));
+  btn.classList.add('selected');
+  btn.classList.remove('dim');
+
+  // 计分
+  const chosen = questions[currentQ].options[idx];
+  for(const [charId, pts] of Object.entries(chosen.scores)){
+    scores[charId] = (scores[charId]||0) + pts;
+  }
+
+  // 延迟推进
+  setTimeout(()=>{
+    currentQ++;
+    if(currentQ >= questions.length){
+      showResult();
+    } else {
+      progFill.style.width = ((currentQ/8)*100)+'%';
+      renderQuestion();
+    }
+  }, 380);
+}
+
+// ==================== 显示结果 ====================
+function showResult(){
+  // 找到最高分
+  let bestId = null, bestScore = -1;
+  for(const [id, s] of Object.entries(scores)){
+    if(s > bestScore){ bestScore = s; bestId = id; }
+  }
+  // 平局取第一个达到最高分的
+  if(!bestId){
+    const keys = Object.keys(characters);
+    bestId = keys[Math.floor(Math.random()*keys.length)];
+  }
+
+  const c = characters[bestId];
+  const starStr = '★'.repeat(c.maternal) + '☆'.repeat(5-c.maternal);
+  const otherIds = Object.keys(characters).filter(id=>id!==bestId);
+
+  resultContent.innerHTML = `
+    <div class="result-card fade-in">
+      <div class="char-header">
+        <div class="char-source">${c.source}</div>
+        <div class="char-name">${c.name}</div>
+        <div class="char-jp">${c.jp}</div>
+      </div>
+
+      <div class="attr-row">
+        <div class="attr">
+          <span class="attr-label">Apparent Age</span>
+          <span class="attr-val">${c.apparentAge}</span>
+        </div>
+        <div class="attr">
+          <span class="attr-label">Maternal Index</span>
+          <span class="stars">${starStr}</span>
+        </div>
+      </div>
+
+      <div class="tagline">"${c.tagline}"</div>
+
+      <div class="analysis">
+        <h3>类型：${c.typeLabel}</h3>
+        ${c.analysis}
+      </div>
+
+      <div class="insight">
+        <div class="insight-label">Desire Structure · 欲望结构</div>
+        <p>${c.insight}</p>
+      </div>
+
+      <div class="other-chars">
+        <h4>Other Archetypes · 其他类型</h4>
+        <div class="char-grid">
+          ${otherIds.map(id=>{
+            const oc = characters[id];
+            return `<div class="char-chip"><span class="chip-name">${oc.name}</span><span class="chip-src">${oc.source} · ${oc.typeLabel}</span></div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  showScreen('screen-result');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ==================== 重新测试 ====================
+function restartQuiz(){
+  scores = {};
+  currentQ = 0;
+  showScreen('screen-intro');
+}
+</script>
+</body>
+</html>
